@@ -39,4 +39,6 @@ class TableController extends Controller
 
         return $this->success('اضافه شد');
     }
+
+
 }

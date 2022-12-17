@@ -12,6 +12,11 @@ class Table extends Model
     use HasFactory;
     protected $guarded = [];
 
+    public function tasks()
+    {
+        return $this->hasMany(TableTask::class);
+    }
+
     protected function pic(): Attribute
     {
         return Attribute::make(
