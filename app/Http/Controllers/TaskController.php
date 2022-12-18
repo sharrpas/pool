@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Table;
+use Carbon\Traits\Rounding;
 use DateTime;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
@@ -25,7 +26,7 @@ class TaskController extends Controller
         else{
             $now = Carbon::now();
             $play_time = Carbon::parse($task->opened_at)->diffInMinutes($now);
-            $play_price = (int)(($table->price)/60*$play_time);
+            $play_price = round(((int)(($table->price)/60*$play_time)),-2);
             return  $this->success([
                 'price_so_far' => $play_price,
                 'duration' => $play_time,
@@ -40,7 +41,7 @@ class TaskController extends Controller
         $task = $table->tasks()->where('closed_at', null)->first();
         if ($task) {
             $play_time = Carbon::parse($task->opened_at)->diffInMinutes($now);
-            $play_price = (int)(($table->price)/60*$play_time);
+            $play_price = round(((int)(($table->price)/60*$play_time)),-2);
             $task->update([
                 'price_so_far' => $play_price,
                 'closed_at' => $now,
