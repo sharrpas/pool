@@ -4,6 +4,7 @@ namespace App\Http\Controllers\SuperAdmin;
 
 use App\Constants\Status;
 use App\Http\Controllers\Controller;
+use App\Models\Gym;
 use App\Models\Role;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -14,6 +15,12 @@ use Illuminate\Validation\Rules\Password;
 
 class GymController extends Controller
 {
+
+    public function index()
+    {
+        $gym = Gym::query()->with('manager')->get();
+        return $this->success($gym);
+    }
     public function add_gym(Request $request)
     {
         $validated_data = Validator::make($request->all(), [

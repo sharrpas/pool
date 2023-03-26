@@ -12,5 +12,5 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-
+Route::get('gyms',[GymController::class,'index'])->middleware('role:super_admin');
 Route::post('add-gym',[GymController::class,'add_gym'])->middleware('role:super_admin');
