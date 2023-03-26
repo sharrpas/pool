@@ -11,11 +11,13 @@ class Status
     public const PERMISSION_DENIED = 403;
     public const NOT_FOUND = 404;
     public const ROUTE_NOT_FOUND = 410;
+    public const OPERATION_ERROR = 444;
 
     public static function getMessage($code)
     {
         $messages = [
             self::OPERATION_SUCCESSFUL => "عملیات با موفقیت انجام شد",
+            self::OPERATION_ERROR => "عملیات با شکست مواجه شد",
             self::VALIDATION_FAILED => "اعتبار سنجی ناموفق بود",
             self::AUTHENTICATION_FAILED => "احراز هویت ناموفق بود",
             self::TOO_MANY_ATTEMPTS => "درخواست های خیلی زیاد",

@@ -19,7 +19,7 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'name',
-        'email',
+        'username',
         'password',
     ];
 
@@ -29,7 +29,6 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $hidden = [
-        'password',
         'remember_token',
     ];
 
@@ -50,5 +49,9 @@ class User extends Authenticatable
         })->count();
     }
 
+    public function gym()
+    {
+        return $this->hasOne(Gym::class,'manager_id');
+    }
 
 }

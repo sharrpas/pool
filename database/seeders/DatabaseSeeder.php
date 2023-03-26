@@ -25,7 +25,10 @@ class DatabaseSeeder extends Seeder
         $role = Role::query()->firstOrCreate([
             'name' => 'super_admin',
         ]);
+        Role::query()->firstOrCreate([
+            'name' => 'manager',
+        ]);
 
-        $user->roles()->attach($role->id);
+        !$user->hasRole($role->name)?$user->roles()->attach($role->id):null;
     }
 }
