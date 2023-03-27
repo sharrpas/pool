@@ -17,4 +17,9 @@ class Gym extends Model
     {
         return $this->belongsTo(User::class,'manager_id');
     }
+
+    public function tables()
+    {
+        return $this->hasMany(Table::class);
+    }
 }
