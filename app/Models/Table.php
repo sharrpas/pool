@@ -22,10 +22,10 @@ class Table extends Model
         return $this->belongsTo(Gym::class);
     }
 
-    protected function pic(): Attribute
-    {
-        return Attribute::make(
-            get: fn ($value) => Storage::url('images/'. $value),
-        );
-    }
+//    protected function pic(): Attribute
+//    {
+//        return Attribute::make(
+//            get: fn ($value) => Storage::url('images/'. $value),
+//        );
+//    }
 }

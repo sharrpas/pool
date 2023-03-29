@@ -22,7 +22,8 @@ class TableController extends Controller
     {
         $validated_data = Validator::make($request->all(), [
             'name' => 'required|string',
-            'pic' => 'required|mimes:jpeg,png,jpg',
+//            'pic' => 'required|mimes:jpeg,png,jpg',
+            'pic' => 'required',
             'price' => 'required|integer'
         ]);
 
@@ -30,14 +31,15 @@ class TableController extends Controller
             return $this->error(Status::VALIDATION_FAILED, $validated_data->errors());
 
 
-        $ImageName = date('Ymdhis') . rand(100, 999) . '.jpg';
-        Storage::putFileAs('images', $request->file('pic'), $ImageName);
+//        $ImageName = date('Ymdhis') . rand(100, 999) . '.jpg';
+//        Storage::putFileAs('images', $request->file('pic'), $ImageName);
 
         $user = auth()->user();
         $gym = $user->gym()->first();
         $gym->tables()->create([
             'name' => $request->name,
-            'pic' => $ImageName,
+//            'pic' => $ImageName,
+            'pic' => $request->pic,
             'price' => $request->price ?? rand(null,1000)
         ]);
 
