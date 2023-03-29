@@ -1,17 +1,19 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Manager;
 
+use App\Constants\Status;
+use App\Http\Controllers\Controller;
 use App\Models\Table;
-use Carbon\Traits\Rounding;
-use DateTime;
-use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 
 class TaskController extends Controller
 {
     public function open(Table $table)
     {
+        if ($table->gym()->first()->manager_id != auth()->user()->id)
+            return $this->error(Status::AUTHENTICATION_FAILED);
+
         $task = $table->tasks()->where('closed_at', null)->first();
         if (!$task) {
             $table->tasks()->create([
@@ -37,6 +39,9 @@ class TaskController extends Controller
 
     public function close(Table $table)
     {
+        if ($table->gym()->first()->manager_id != auth()->user()->id)
+            return $this->error(Status::AUTHENTICATION_FAILED);
+
         $now = Carbon::now();
         $task = $table->tasks()->where('closed_at', null)->first();
         if ($task) {

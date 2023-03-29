@@ -17,6 +17,11 @@ class Table extends Model
         return $this->hasMany(TableTask::class);
     }
 
+    public function gym()
+    {
+        return $this->belongsTo(Gym::class);
+    }
+
     protected function pic(): Attribute
     {
         return Attribute::make(
