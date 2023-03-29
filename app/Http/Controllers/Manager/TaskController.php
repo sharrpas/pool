@@ -16,25 +16,25 @@ class TaskController extends Controller
 
         $task = $table->tasks()->where('closed_at', null)->first();
         if (!$task) {
-            $table->tasks()->create([
+            $task = $table->tasks()->create([
                 'price_so_far' => '0',
                 'opened_at' => Carbon::now(),
             ]);
             $table->update([
                 'status' => 1,
             ]);
-            return $this->success('باز شد');
+
         }
-        else{
-            $now = Carbon::now();
-            $play_time = Carbon::parse($task->opened_at)->diffInMinutes($now);
-            $play_price = round(((int)(($table->price)/60*$play_time)),-2);
-            return  $this->success([
-                'price_so_far' => $play_price,
-                'duration' => $play_time,
-                'opened_at' => substr($task->opened_at,11,5),
-            ]);
-        }
+        $now = Carbon::now();
+        $play_time = Carbon::parse($task->opened_at)->diffInMinutes($now);
+        $play_price = round(((int)(($table->price) / 60 * $play_time)), -2);
+        return $this->success([
+            'باز شد',
+            'price_so_far' => $play_price,
+            'duration' => $play_time,
+            'opened_at' => substr($task->opened_at, 11, 5),
+        ]);
+
     }
 
     public function close(Table $table)
@@ -46,7 +46,7 @@ class TaskController extends Controller
         $task = $table->tasks()->where('closed_at', null)->first();
         if ($task) {
             $play_time = Carbon::parse($task->opened_at)->diffInMinutes($now);
-            $play_price = round(((int)(($table->price)/60*$play_time)),-2);
+            $play_price = round(((int)(($table->price) / 60 * $play_time)), -2);
             $task->update([
                 'price_so_far' => $play_price,
                 'closed_at' => $now,
@@ -58,15 +58,17 @@ class TaskController extends Controller
                 'بسته شد',
                 'price' => $play_price,
                 'duration' => $play_time,
+                'opened_at' => substr($task->opened_at, 11, 5),
+                'closed_at' => substr($task->closed_at, 11, 5),
             ]);
-        }
-        else{
-            $task = $table->tasks()->orderBy('id','desc')->first();
+        } else {
+            $task = $table->tasks()->orderBy('id', 'desc')->first();
             return $this->success([
                 'قبلا بسته شده',
                 'price' => $task->price_so_far,
-                'opened_at' => substr($task->opened_at,11,5),
-                'closed_at' => substr($task->closed_at,11,5),
+                'duration' => Carbon::parse($task->opened_at)->diffInMinutes($task->closed_at),
+                'opened_at' => substr($task->opened_at, 11, 5),
+                'closed_at' => substr($task->closed_at, 11, 5),
             ]);
         }
     }
