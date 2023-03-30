@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Manager;
 
 use App\Constants\Status;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\TableTaskResource;
 use App\Models\Table;
 use App\Models\TableTask;
 use Illuminate\Console\View\Components\Task;
@@ -86,8 +87,7 @@ class TaskController extends Controller
 
         $last24 = Carbon::now()->subDay();
         $tasks = $table->tasks()->where('opened_at','>',$last24)->orderBy('opened_at','desc')->get();
-        //todo substr opened_at in response
-        return $this->success($tasks);
+        return $this->success(TableTaskResource::collection($tasks));
     }
 
     public function pay(TableTask $task)
