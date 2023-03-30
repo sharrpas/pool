@@ -6,6 +6,7 @@ use App\Constants\Status;
 use App\Http\Controllers\Controller;
 use App\Models\Table;
 use Illuminate\Support\Carbon;
+use function GuzzleHttp\Promise\task;
 
 class TaskController extends Controller
 {
@@ -75,4 +76,17 @@ class TaskController extends Controller
             ]);
         }
     }
+
+    public function tasks(Table $table)
+    {
+        if ($table->gym()->first()->manager_id != auth()->user()->id)
+            return $this->error(Status::AUTHENTICATION_FAILED);
+
+        $last24 = Carbon::now()->subDay();
+        $tasks = $table->tasks()->where('opened_at','>',$last24)->orderBy('opened_at')->get()->reverse();
+        //todo substr opened_at in response
+        return $this->success($tasks);
+    }
+
+
 }

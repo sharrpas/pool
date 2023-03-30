@@ -21,7 +21,27 @@ Route::prefix('manager')->middleware(['auth:sanctum', 'role:manager'])->group(fu
     Route::post('open/table/{table}',[TaskController::class,'open']);
     Route::post('close/table/{table}',[TaskController::class,'close']);
 
+    Route::get('tasks/table/{table}',[TaskController::class,'tasks']);
+
 
 });
 
 
+/*//todo
+
+    composer require cryptommer/smsir
+
+    php artisan vendor:publish --provider Cryptommer\Smsir\SmsirServiceProvider
+
+    SMSIR_API_KEY=
+    SMSIR_LINE_NUMBER=
+
+    //use Cryptommer\Smsir\Smsir;
+    $send = smsir::Send();
+    $parameter = new \Cryptommer\Smsir\Objects\Parameters('CODE', 'srosh');
+    $parameters = array($parameter);
+
+    $send->Verify('09184185136', '812390', $parameters);
+
+    return "suc";
+*/
