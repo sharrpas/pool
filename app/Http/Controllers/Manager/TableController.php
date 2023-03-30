@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Manager;
 
 use App\Constants\Status;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\TableResource;
 use App\Models\Gym;
 use App\Models\Table;
 use Illuminate\Http\Request;
@@ -15,7 +16,7 @@ class TableController extends Controller
     public function index()
     {
         $gym = auth()->user()->gym()->first();
-        return $this->success($gym->tables()->get());
+        return $this->success(TableResource::collection($gym->tables()->get()));
     }
 
     public function store(Request $request)
