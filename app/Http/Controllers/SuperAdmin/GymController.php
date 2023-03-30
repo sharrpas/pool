@@ -26,6 +26,7 @@ class GymController extends Controller
         $validated_data = Validator::make($request->all(), [
             'gym_name' => 'required' ,
             'manager_name' => 'required' ,
+            'mobile' => 'unique:App\Models\User,mobile|required|regex:/(09)[0-9]{9}/|size:11',
             'username' => 'unique:App\Models\User,username|required',
             'password' => [Password::required(), Password::min(4)->numbers()/*->mixedCase()->letters()->symbols()->uncompromised()*/, 'confirmed'],
             ]);
@@ -37,6 +38,7 @@ class GymController extends Controller
             $manager = User::query()->create([
                 'name' => $request->manager_name,
                 'username' => $request->username,
+                'mobile' => $request->mobile,
                 'password' => Hash::make($request->password),
             ]);
             $manager->roles()->attach(Role::query()->where('name','manager')->first()->id);
