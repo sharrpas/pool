@@ -22,6 +22,8 @@ Route::prefix('manager')->middleware(['auth:sanctum', 'role:manager'])->group(fu
     Route::post('close/table/{table}',[TaskController::class,'close']);
 
     Route::get('tasks/table/{table}',[TaskController::class,'tasks']);
+    Route::post('pay/task/{task}',[TaskController::class,'pay']);
+    Route::post('unpaid/task/{task}',[TaskController::class,'unpaid']);
 
 
 });

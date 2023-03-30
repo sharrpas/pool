@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Manager;
 use App\Constants\Status;
 use App\Http\Controllers\Controller;
 use App\Models\Table;
+use App\Models\TableTask;
+use Illuminate\Console\View\Components\Task;
 use Illuminate\Support\Carbon;
 use function GuzzleHttp\Promise\task;
 
@@ -88,5 +90,34 @@ class TaskController extends Controller
         return $this->success($tasks);
     }
 
+    public function pay(TableTask $task)
+    {
+        if ($task->table()->first()->gym()->first()->manager_id != auth()->user()->id)
+            return $this->error(Status::AUTHENTICATION_FAILED);
+
+        if ($task->closed_at == null)
+            return $this->error(Status::OPERATION_ERROR,'یادت رفته میز رو ببندی');
+
+        $task->update([
+            'payment_status' => 'paid',
+        ]);
+
+        return $this->success('پرداخت شد');
+    }
+
+    public function unpaid(TableTask $task)
+    {
+        if ($task->table()->first()->gym()->first()->manager_id != auth()->user()->id)
+            return $this->error(Status::AUTHENTICATION_FAILED);
+
+        if ($task->closed_at == null)
+            return $this->error(Status::OPERATION_ERROR,'یادت رفته میز رو ببندی');
+
+        $task->update([
+            'payment_status' => 'unpaid',
+        ]);
+
+        return $this->success('وضعیت میز به عدم پرداخت تغییر یافت');
+    }
 
 }
