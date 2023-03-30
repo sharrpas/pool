@@ -102,7 +102,10 @@ class TaskController extends Controller
             'payment_status' => 'paid',
         ]);
 
-        return $this->success('پرداخت شد');
+        return $this->success([
+            'پرداخت شد',
+            'table_id' => $task->table()->first()->id,
+        ]);
     }
 
     public function unpaid(TableTask $task)
@@ -117,7 +120,10 @@ class TaskController extends Controller
             'payment_status' => 'unpaid',
         ]);
 
-        return $this->success('وضعیت میز به عدم پرداخت تغییر یافت');
+        return $this->success([
+            'وضعیت میز به عدم پرداخت تغییر یافت',
+            'table_id' => $task->table()->first()->id,
+        ]);
     }
 
 }
