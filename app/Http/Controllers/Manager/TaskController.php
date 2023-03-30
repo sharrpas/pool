@@ -29,6 +29,7 @@ class TaskController extends Controller
         $play_time = Carbon::parse($task->opened_at)->diffInMinutes($now);
         $play_price = round(((int)(($table->price) / 60 * $play_time)), -2);
         return $this->success([
+            'table_id' => $table->id,
             'message' =>  $table->name . ' باز شد ',
             'price_so_far' => $play_price,
             'duration' => $play_time,
@@ -55,6 +56,7 @@ class TaskController extends Controller
                 'status' => 0,
             ]);
             return $this->success([
+                'table_id' => $table->id,
                 'message' =>  $table->name .' بسته شد ',
                 'price' => $play_price,
                 'duration' => $play_time,
@@ -64,6 +66,7 @@ class TaskController extends Controller
         } else {
             $task = $table->tasks()->orderBy('id', 'desc')->first();
             return $this->success([
+                'table_id' => $table->id,
                 'message' =>  $table->name . ' قبلا بسته شده ',
                 'price' => $task->price_so_far,
                 'duration' => Carbon::parse($task->opened_at)->diffInMinutes($task->closed_at),
