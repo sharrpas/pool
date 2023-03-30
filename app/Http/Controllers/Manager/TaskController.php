@@ -85,7 +85,7 @@ class TaskController extends Controller
             return $this->error(Status::AUTHENTICATION_FAILED);
 
         $last24 = Carbon::now()->subDay();
-        $tasks = $table->tasks()->where('opened_at','>',$last24)->orderBy('opened_at')->get()->reverse();
+        $tasks = $table->tasks()->where('opened_at','>',$last24)->orderBy('opened_at','desc')->get();
         //todo substr opened_at in response
         return $this->success($tasks);
     }
