@@ -12,6 +12,8 @@ use Illuminate\Support\Facades\Route;
 
 Route::post('login',[UserController::class,'login']);
 Route::post('logout',[UserController::class,'logout'])->middleware('auth:sanctum');
+Route::post('change-password',[UserController::class,'changePass']);
+Route::post('send-code',[UserController::class,'requestCode']);
 
 Route::prefix('manager')->middleware(['auth:sanctum', 'role:manager'])->group(function () {
 
@@ -27,23 +29,3 @@ Route::prefix('manager')->middleware(['auth:sanctum', 'role:manager'])->group(fu
 
 
 });
-
-
-/*//todo
-
-    composer require cryptommer/smsir
-
-    php artisan vendor:publish --provider Cryptommer\Smsir\SmsirServiceProvider
-
-    SMSIR_API_KEY=
-    SMSIR_LINE_NUMBER=
-
-    //use Cryptommer\Smsir\Smsir;
-    $send = smsir::Send();
-    $parameter = new \Cryptommer\Smsir\Objects\Parameters('CODE', 'srosh');
-    $parameters = array($parameter);
-
-    $send->Verify('09184185136', '812390', $parameters);
-
-    return "suc";
-*/

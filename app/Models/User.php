@@ -58,4 +58,9 @@ class User extends Authenticatable
         return $this->hasOne(Gym::class,'manager_id');
     }
 
+    public function verificationCode()
+    {
+        return $this->hasMany(VerificationCode::class);
+    }
+
 }
