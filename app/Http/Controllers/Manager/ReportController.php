@@ -9,6 +9,7 @@ use App\Models\TableTask;
 use App\Models\User;
 use App\Models\VerificationCode;
 use Carbon\Carbon;
+use Carbon\CarbonPeriod;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
@@ -20,8 +21,15 @@ class ReportController extends Controller
     {
 
         $gym = auth()->user()->gym()->first();
-        return $this->success(ReportTableResource::collection($gym->tables()->get()));
+        $date = CarbonPeriod::dates(now()->subMonth(1), now())->toArray();
+        $dates = [];
+        for ($i = 0; $i < count($date); $i++) {
+            $dates[$i] = $date[$i]->format('Y-m-d');
+        }
 
+        return $this->success([
+            'dates' => $dates,
+            'tables' => ReportTableResource::collection($gym->tables()->get())]);
 
 
 //        $validated_data = Validator::make($request->all(), [
@@ -55,6 +63,13 @@ class ReportController extends Controller
 //            ->groupBy('date')
 //            ->get();
 
+    }
 
+    public function Income()
+    {
+        $gym = auth()->user()->gym()->first();
+        $tables = $gym->tables()->get();
+
+        return $this->success(ReportTableResource::collection($tables->load('tasks')));
     }
 }
