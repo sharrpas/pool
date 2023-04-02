@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Manager\ReportController;
 use App\Http\Controllers\Manager\TableController;
 use App\Http\Controllers\Manager\TaskController;
 use App\Http\Controllers\UserController;
@@ -26,6 +27,10 @@ Route::prefix('manager')->middleware(['auth:sanctum', 'role:manager'])->group(fu
     Route::get('tasks/table/{table}',[TaskController::class,'tasks']);
     Route::post('pay/task/{task}',[TaskController::class,'pay']);
     Route::post('unpaid/task/{task}',[TaskController::class,'unpaid']);
+
+    Route::prefix('report')->group(function () {
+        Route::post('hours',[ReportController::class,'HoursPerTables']);
+    });
 
 
 });
