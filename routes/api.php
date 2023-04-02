@@ -30,6 +30,7 @@ Route::prefix('manager')->middleware(['auth:sanctum', 'role:manager'])->group(fu
 
     Route::prefix('report')->group(function () {
         Route::post('hours',[ReportController::class,'HoursPerTables']);
+        Route::post('income',[ReportController::class,'Income']);
     });
 
 

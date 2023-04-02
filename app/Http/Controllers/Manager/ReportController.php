@@ -68,8 +68,34 @@ class ReportController extends Controller
     public function Income()
     {
         $gym = auth()->user()->gym()->first();
-        $tables = $gym->tables()->get();
 
-        return $this->success(ReportTableResource::collection($tables->load('tasks')));
+        $sum7days = TableTask::query()
+            ->select(
+                DB::raw('DATE(opened_at) as date'),
+                DB::raw("SUM(price_so_far) AS 7days_income")
+            )
+            ->whereIn('table_id', $gym->tables()->select('id'))
+            ->where('opened_at', '>', Carbon::now()->subDay(7))
+            ->groupBy('date')
+            ->get();
+
+        $sum7daysTOTAL = TableTask::query()
+            ->select(DB::raw("SUM(price_so_far) AS sum_7days_income"))
+            ->whereIn('table_id', $gym->tables()->select('id'))
+            ->where('opened_at', '>', Carbon::now()->subDay(7))
+            ->first();
+
+        $sum1monthTOTAL = TableTask::query()
+            ->select(DB::raw("SUM(price_so_far) AS sum_month_income"))
+            ->whereIn('table_id', $gym->tables()->select('id'))
+            ->where('opened_at', '>', Carbon::now()->subMonth(1))
+            ->first();
+
+
+        return $this->success([
+            'sum_7days_income' => $sum7daysTOTAL->sum_7days_income,
+            'sum_month_income' => $sum1monthTOTAL->sum_month_income,
+            '7days_income' => $sum7days
+        ]);
     }
 }
