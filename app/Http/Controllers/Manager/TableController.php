@@ -47,4 +47,15 @@ class TableController extends Controller
 
         return $this->success('اضافه شد');
     }
+
+    public function delete(Table $table)
+    {
+        if ($table->gym()->first()->manager_id != auth()->user()->id)
+            return $this->error(Status::AUTHENTICATION_FAILED);
+
+        $table->tasks()->delete();
+        $table->delete();
+
+        return $this->success();
+    }
 }
