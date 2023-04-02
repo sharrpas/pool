@@ -34,7 +34,7 @@ class UserController extends Controller
             return $this->error(Status::AUTHENTICATION_FAILED, 'نام کاربری یا رمز عبور اشتباه است');
         }
 
-        $pass_check = Hash::check($request->password, $user->firstOrFail()->password);
+        $pass_check = Hash::check($request->password, $user->password);
 
         if ($user && $pass_check) {
             return $this->success([
