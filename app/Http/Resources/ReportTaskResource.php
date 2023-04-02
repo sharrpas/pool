@@ -17,12 +17,9 @@ class ReportTaskResource extends JsonResource
     {
         return [
             'table_id' => $this->table_id,
-            'sum_price_so_far' => $this->sum_price_so_far,
+            'sum_duration' => $this->sum_duration,
             'count' => $this->count,
             'date' => $this->date,
-//            'opened_at' => substr($this->opened_at, 11, 5),
-//            'closed_at' => substr($this->closed_at, 11, 5),
-//            'duration' => Carbon::parse($this->opened_at)->diffInMinutes(Carbon::parse($this->closed_at))
         ];
     }
 }

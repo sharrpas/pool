@@ -28,10 +28,7 @@ class ReportTableResource extends JsonResource
                     DB::raw('DATE(opened_at) as date'),
                     DB::raw('count(*) as count'),
                     DB::raw('table_id'),
-                    DB::raw("SUM(price_so_far) AS sum_price_so_far"),
-                    DB::raw("opened_at"),
-                    DB::raw("closed_at"),
-
+                    DB::raw("SUM(duration) AS sum_duration"),
                 )
                 ->where('opened_at','>',Carbon::now()->subMonth(1))
                 ->groupBy('table_id')
