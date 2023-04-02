@@ -53,6 +53,7 @@ class TaskController extends Controller
             $play_time = Carbon::parse($task->opened_at)->diffInMinutes($now);
             $play_price = round(((int)(($table->price) / 60 * $play_time)), -2);
             $task->update([
+                'duration' => $play_time,
                 'price_so_far' => $play_price,
                 'closed_at' => $now,
             ]);
