@@ -20,7 +20,7 @@ class ReportController extends Controller
     {
 
         $gym = auth()->user()->gym()->first();
-        return ReportTableResource::collection($gym->tables()->get());
+        return $this->success(ReportTableResource::collection($gym->tables()->get()));
 
 
 
