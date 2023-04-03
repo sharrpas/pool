@@ -72,7 +72,7 @@ class ReportController extends Controller
         $sum7days = TableTask::query()
             ->select(
                 DB::raw('DATE(opened_at) as date'),
-                DB::raw("SUM(price_so_far) AS 7days_income")
+                DB::raw("SUM(price_so_far) AS day_income")
             )
             ->whereIn('table_id', $gym->tables()->select('id'))
             ->where('opened_at', '>', Carbon::now()->subDay(7))
@@ -95,7 +95,7 @@ class ReportController extends Controller
         return $this->success([
             'sum_7days_income' => $sum7daysTOTAL->sum_7days_income,
             'sum_month_income' => $sum1monthTOTAL->sum_month_income,
-            '7days_income' => $sum7days
+            'income_7days' => $sum7days
         ]);
     }
 }

@@ -39,6 +39,7 @@ class UserController extends Controller
         if ($user && $pass_check) {
             return $this->success([
                 'user' => $user->name,
+                'gym_name' => $user->gym()->first()->name,
                 'username' => $user->username,
                 'role' => $user->roles()->first()->name,
                 'token' => $user->createToken('token_base_name')->plainTextToken
