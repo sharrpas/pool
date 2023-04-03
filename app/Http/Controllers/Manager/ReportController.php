@@ -77,6 +77,7 @@ class ReportController extends Controller
             ->whereIn('table_id', $gym->tables()->select('id'))
             ->where('opened_at', '>', Carbon::now()->subDay(7))
             ->groupBy('date')
+            ->orderBy('opened_at')
             ->get();
 
         $sum7daysTOTAL = TableTask::query()
