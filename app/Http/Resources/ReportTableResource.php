@@ -23,18 +23,6 @@ class ReportTableResource extends JsonResource
             'name' => $this->name,
             'pic' => $this->pic,
 
-            'tasks' => ReportTaskResource::collection($this->tasks()
-                ->select(
-                    DB::raw('DATE(opened_at) as date'),
-                    DB::raw('count(*) as count'),
-                    DB::raw('table_id'),
-                    DB::raw("SUM(duration) AS sum_duration"),
-                )
-                ->where('opened_at','>',Carbon::now()->subMonth(1))
-                ->groupBy('table_id')
-                ->groupBy('date')
-                ->get())
-
             ];
     }
 }

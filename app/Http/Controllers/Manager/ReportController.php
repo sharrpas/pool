@@ -26,42 +26,39 @@ class ReportController extends Controller
         for ($i = 0; $i < count($date); $i++) {
             $dates[$i] = $date[$i]->format('Y-m-d');
         }
+        $lableData = [];
+        foreach ($dates as $item) {
+            $lableData[$item] = "0";
+        }
 
+        $tables = ReportTableResource::collection($gym->tables()->get());
+
+
+        $mappedcollection = $tables->map(function ($table, $key) use ($lableData) {
+            $tasks = $table->tasks()->select(
+                DB::raw('DATE(opened_at) as date'),
+//                DB::raw('count(*) as count'),
+                DB::raw('table_id'),
+                DB::raw("SUM(duration) AS sum_duration"),
+            )
+                ->where('opened_at', '>', Carbon::now()->subMonth(1))
+                ->groupBy('table_id')
+                ->groupBy('date')
+                ->get();
+
+            $tasks->map(function ($task, $key) use (&$lableData) {
+                $lableData[$task->date] = $task->sum_duration;
+            });
+            return [
+                'label' => $table->name,
+                'data' => array_values($lableData),
+                'borderWidth' => 2,
+            ];
+        });
         return $this->success([
-            'dates' => $dates,
-            'tables' => ReportTableResource::collection($gym->tables()->get())]);
-
-
-//        $validated_data = Validator::make($request->all(), [
-//            'start_at' => 'required|date_format:Y-m-d H:i:s',
-//            'end_at' => 'required|date_format:Y-m-d H:i:s',
-//        ]);
-//
-//        if ($validated_data->fails())
-//            return $this->error(Status::VALIDATION_FAILED, $validated_data->errors());
-
-//        $tables = $gym->tables()->select(['id', 'gym_id', 'name', 'pic'])
-//            ->with(['tasks' => function ($query) use ($request) {
-//                $query->whereBetween('opened_at', [$request->start_at, $request->end_at]);
-//            }])
-//            ->withCount([
-//                'tasks AS price_so_far_sum' => function ($query) {
-//                    $query->select(DB::raw("SUM(price_so_far)"));
-//                }
-//            ])
-//            ->get();
-//
-//        $rr = TableTask::query()
-//            ->select(
-//                DB::raw('DATE(opened_at) as date'),
-//                DB::raw('count(*) as views'),
-//                DB::raw('table_id'),
-//                DB::raw("SUM(price_so_far) AS sum_price_so_far"))
-//            ->whereIn('table_id',$gym->tables()->select('id'))
-//            ->whereBetween('opened_at', [$request->start_at, $request->end_at])
-//            ->groupBy('table_id')
-//            ->groupBy('date')
-//            ->get();
+            'labels' => $dates,
+            'datasets' => $mappedcollection
+        ]);
 
     }
 
