@@ -19,6 +19,7 @@ Route::post('send-code',[UserController::class,'requestCode']);
 Route::prefix('manager')->middleware(['auth:sanctum', 'role:manager'])->group(function () {
 
     Route::get('tables',[TableController::class,'index']);
+    Route::get('table/{table}',[TableController::class,'show']);
     Route::post('table',[TableController::class,'store']);
     Route::post('table/{table}',[TableController::class,'update']);
     Route::delete('table/{table}',[TableController::class,'delete']);

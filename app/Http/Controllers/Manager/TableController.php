@@ -19,6 +19,14 @@ class TableController extends Controller
         return $this->success(TableResource::collection($gym->tables()->get()));
     }
 
+    public function show(Table $table)
+    {
+        if ($table->gym()->first()->manager_id != auth()->user()->id)
+            return $this->error(Status::AUTHENTICATION_FAILED);
+
+        return $this->success($table);
+    }
+
     public function store(Request $request)
     {
         $validated_data = Validator::make($request->all(), [
