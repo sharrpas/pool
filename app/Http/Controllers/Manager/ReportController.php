@@ -52,8 +52,8 @@ class ReportController extends Controller
             return [
                 'label' => $table->name,
                 'data' => array_values($lableData),
-                'borderWidth' => 2,
-                'tension' => 0.1,
+                'borderWidth' => 3,
+                'tension' => 0.2,
             ];
         });
         return $this->success([
