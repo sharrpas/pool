@@ -20,6 +20,7 @@ Route::prefix('manager')->middleware(['auth:sanctum', 'role:manager'])->group(fu
 
     Route::get('tables',[TableController::class,'index']);
     Route::post('table',[TableController::class,'store']);
+    Route::patch('table/{table}',[TableController::class,'update']);
     Route::delete('table/{table}',[TableController::class,'delete']);
 
     Route::post('open/table/{table}',[TaskController::class,'open']);
