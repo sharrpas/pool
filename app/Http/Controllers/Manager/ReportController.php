@@ -47,13 +47,12 @@ class ReportController extends Controller
                 ->get();
 
             $tasks->map(function ($task, $key) use (&$lableData) {
-                $lableData[$task->date] = $task->sum_duration;
+                $lableData[$task->date] =  (string)round(($task->sum_duration)/60,1);
             });
             return [
                 'label' => $table->name,
                 'data' => array_values($lableData),
                 'borderWidth' => 2,
-                //'fill' => true,
                 'tension' => 0.1,
             ];
         });
