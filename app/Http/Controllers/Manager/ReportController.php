@@ -10,6 +10,7 @@ use App\Models\User;
 use App\Models\VerificationCode;
 use Carbon\Carbon;
 use Carbon\CarbonPeriod;
+use Hekmatinasser\Verta\Verta;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
@@ -23,13 +24,13 @@ class ReportController extends Controller
         $gym = auth()->user()->gym()->first();
         $date = CarbonPeriod::dates(now()->subMonth(1), now())->toArray();
         $dates = [];
+        $lableData = [];
         for ($i = 0; $i < count($date); $i++) {
             $dates[$i] = $date[$i]->format('Y-m-d');
+            $lableData[$dates[$i]] = "0";
+            $dates[$i] = Verta($dates[$i])->format('Y-m-d');
         }
-        $lableData = [];
-        foreach ($dates as $item) {
-            $lableData[$item] = "0";
-        }
+
 
         $tables = ReportTableResource::collection($gym->tables()->get());
 
