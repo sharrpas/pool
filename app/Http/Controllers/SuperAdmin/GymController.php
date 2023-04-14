@@ -31,7 +31,7 @@ class GymController extends Controller
             'password' => [Password::required(), Password::min(4)->numbers()/*->mixedCase()->letters()->symbols()->uncompromised()*/, 'confirmed'],
             ]);
         if ($validated_data->fails())
-            return $this->error(Status::VALIDATION_FAILED,$validated_data->errors());
+            return $this->error(Status::VALIDATION_FAILED,$validated_data->errors()->first());
 
         DB::beginTransaction();
         try {

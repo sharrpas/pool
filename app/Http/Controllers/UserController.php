@@ -24,7 +24,7 @@ class UserController extends Controller
             'password' => 'required'
         ]);
         if ($validated_data->fails())
-            return $this->error(Status::VALIDATION_FAILED, $validated_data->errors());
+            return $this->error(Status::VALIDATION_FAILED, $validated_data->errors()->first());
 
 
         if (!$user = User::query()
@@ -67,7 +67,7 @@ class UserController extends Controller
             'mobile' => 'required|regex:/(09)[0-9]{9}/|size:11',
         ]);
         if ($validated_data->fails())
-            return $this->error(Status::VALIDATION_FAILED, $validated_data->errors());
+            return $this->error(Status::VALIDATION_FAILED, $validated_data->errors()->first());
 
 
         if (!$user = User::query()->where('mobile', $request->mobile)->first()) {
@@ -100,7 +100,7 @@ class UserController extends Controller
             ],
         ]);
         if ($validated_data->fails())
-            return $this->error(Status::VALIDATION_FAILED, $validated_data->errors());
+            return $this->error(Status::VALIDATION_FAILED, $validated_data->errors()->first());
 
         if (!$verification_code = VerificationCode::query()
             ->where('code', $request->verification_code)

@@ -37,7 +37,7 @@ class TableController extends Controller
         ]);
 
         if ($validated_data->fails())
-            return $this->error(Status::VALIDATION_FAILED, $validated_data->errors());
+            return $this->error(Status::VALIDATION_FAILED, $validated_data->errors()->first());
 
 
 //        $ImageName = date('Ymdhis') . rand(100, 999) . '.jpg';
@@ -68,7 +68,7 @@ class TableController extends Controller
         ]);
 
         if ($validated_data->fails())
-            return $this->error(Status::VALIDATION_FAILED, $validated_data->errors());
+            return $this->error(Status::VALIDATION_FAILED, $validated_data->errors()->first());
 
 
         $table->update([
