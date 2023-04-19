@@ -19,6 +19,14 @@ class TableController extends Controller
         return $this->success(TableResource::collection($gym->tables()->get()));
     }
 
+    public function show(Table $table)
+    {
+        if ($table->gym()->first()->manager_id != auth()->user()->id)
+            return $this->error(Status::AUTHENTICATION_FAILED);
+
+        return $this->success($table);
+    }
+
     public function store(Request $request)
     {
         $validated_data = Validator::make($request->all(), [
@@ -29,7 +37,7 @@ class TableController extends Controller
         ]);
 
         if ($validated_data->fails())
-            return $this->error(Status::VALIDATION_FAILED, $validated_data->errors());
+            return $this->error(Status::VALIDATION_FAILED, $validated_data->errors()->first());
 
 
 //        $ImageName = date('Ymdhis') . rand(100, 999) . '.jpg';
@@ -41,11 +49,36 @@ class TableController extends Controller
             'name' => $request->name,
 //            'pic' => $ImageName,
             'pic' => $request->pic,
-            'price' => $request->price ?? rand(null,1000)
+            'price' => $request->price ?? rand(null, 1000)
         ]);
 
 
         return $this->success('اضافه شد');
+    }
+
+    public function update(Table $table, Request $request)
+    {
+        if ($table->gym()->first()->manager_id != auth()->user()->id)
+            return $this->error(Status::AUTHENTICATION_FAILED);
+
+        $validated_data = Validator::make($request->all(), [
+            'name' => 'string',
+//            'pic' => 'required',
+            'price' => 'integer'
+        ]);
+
+        if ($validated_data->fails())
+            return $this->error(Status::VALIDATION_FAILED, $validated_data->errors()->first());
+
+
+        $table->update([
+            'name' => $request->name??$table->name,
+            'pic' => $request->pic ?? $table->pic,
+            'price' => $request->price ?? $table->price,
+        ]);
+
+        return $this->success($table->name.' ویرایش شد ');
+
     }
 
     public function delete(Table $table)

@@ -58,7 +58,7 @@ class Handler extends ExceptionHandler
             return response()->json([
                 'error' => true,
                 'code' => 400,
-                'message' => "Validation failed",
+                'message' => "اعتبار سنجی ناموفق بود",
                 'data' => $e->errors()
             ], 400);
         }
@@ -67,7 +67,7 @@ class Handler extends ExceptionHandler
             return response()->json([
                 'error' => true,
                 'code' => 404,
-                'message' => "Model not found",
+                'message' => "مدل پیدا نشد",
                 'data' => "Model not found. Model: " . $e->getModel() . ", ID: " . implode(', ', $e->getIds())
             ], 404);
         }
@@ -76,7 +76,7 @@ class Handler extends ExceptionHandler
             return response()->json([
                 'error' => true,
                 'code' => 403,
-                'message' => "Method not allowed",
+                'message' => "روش مجاز نمی باشد",
                 'data' => "Method not allowed:" . $e->getMessage(),
             ], 403);
         }
@@ -85,8 +85,8 @@ class Handler extends ExceptionHandler
             return response()->json([
                 'error' => true,
                 'code' => 401,
-                'message' => "Unauthorized",
-                'data' => "Unauthorized role : " . $e->getMessage() ,
+                'message' => "احراز هویت ناموفق بود",
+                'data' => $e->getMessage() ,
             ], 401);
         }
 

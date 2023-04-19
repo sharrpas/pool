@@ -10,6 +10,7 @@ use App\Models\User;
 use App\Models\VerificationCode;
 use Carbon\Carbon;
 use Carbon\CarbonPeriod;
+use Hekmatinasser\Verta\Verta;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
@@ -23,45 +24,43 @@ class ReportController extends Controller
         $gym = auth()->user()->gym()->first();
         $date = CarbonPeriod::dates(now()->subMonth(1), now())->toArray();
         $dates = [];
+        $lableData = [];
         for ($i = 0; $i < count($date); $i++) {
             $dates[$i] = $date[$i]->format('Y-m-d');
+            $lableData[$dates[$i]] = "0";
+            $dates[$i] = Verta($dates[$i])->format('Y-m-d');
         }
 
+
+        $tables = ReportTableResource::collection($gym->tables()->get());
+
+
+        $mappedcollection = $tables->map(function ($table, $key) use ($lableData) {
+            $tasks = $table->tasks()->select(
+                DB::raw('DATE(opened_at) as date'),
+//                DB::raw('count(*) as count'),
+                DB::raw('table_id'),
+                DB::raw("SUM(duration) AS sum_duration"),
+            )
+                ->where('opened_at', '>', Carbon::now()->subMonth(1))
+                ->groupBy('table_id')
+                ->groupBy('date')
+                ->get();
+
+            $tasks->map(function ($task, $key) use (&$lableData) {
+                $lableData[$task->date] =  (string)round(($task->sum_duration)/60,1);
+            });
+            return [
+                'label' => $table->name,
+                'data' => array_values($lableData),
+                'borderWidth' => 3,
+                'tension' => 0.2,
+            ];
+        });
         return $this->success([
-            'dates' => $dates,
-            'tables' => ReportTableResource::collection($gym->tables()->get())]);
-
-
-//        $validated_data = Validator::make($request->all(), [
-//            'start_at' => 'required|date_format:Y-m-d H:i:s',
-//            'end_at' => 'required|date_format:Y-m-d H:i:s',
-//        ]);
-//
-//        if ($validated_data->fails())
-//            return $this->error(Status::VALIDATION_FAILED, $validated_data->errors());
-
-//        $tables = $gym->tables()->select(['id', 'gym_id', 'name', 'pic'])
-//            ->with(['tasks' => function ($query) use ($request) {
-//                $query->whereBetween('opened_at', [$request->start_at, $request->end_at]);
-//            }])
-//            ->withCount([
-//                'tasks AS price_so_far_sum' => function ($query) {
-//                    $query->select(DB::raw("SUM(price_so_far)"));
-//                }
-//            ])
-//            ->get();
-//
-//        $rr = TableTask::query()
-//            ->select(
-//                DB::raw('DATE(opened_at) as date'),
-//                DB::raw('count(*) as views'),
-//                DB::raw('table_id'),
-//                DB::raw("SUM(price_so_far) AS sum_price_so_far"))
-//            ->whereIn('table_id',$gym->tables()->select('id'))
-//            ->whereBetween('opened_at', [$request->start_at, $request->end_at])
-//            ->groupBy('table_id')
-//            ->groupBy('date')
-//            ->get();
+            'labels' => $dates,
+            'datasets' => $mappedcollection
+        ]);
 
     }
 

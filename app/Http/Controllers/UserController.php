@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Constants\Status;
+use App\Models\Role;
 use App\Models\User;
 use App\Models\VerificationCode;
 use Carbon\Carbon;
@@ -10,6 +11,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Password;
 use function Symfony\Component\String\u;
 use Cryptommer\Smsir\Smsir;
@@ -24,7 +26,7 @@ class UserController extends Controller
             'password' => 'required'
         ]);
         if ($validated_data->fails())
-            return $this->error(Status::VALIDATION_FAILED, $validated_data->errors());
+            return $this->error(Status::VALIDATION_FAILED, $validated_data->errors()->first());
 
 
         if (!$user = User::query()
@@ -50,6 +52,34 @@ class UserController extends Controller
 
     }
 
+    public function signup(Request $request)
+    {
+        $validated_data = Validator::make($request->all(), [
+            'name' => 'required' ,
+            'username' => 'unique:App\Models\User,username|required',
+            'mobile' => 'unique:App\Models\User,mobile|required|regex:/(09)[0-9]{9}/|size:11',
+            'password' => [Password::required(), Password::min(4)->numbers(), 'confirmed'],
+        ]);
+        if ($validated_data->fails())
+            return $this->error(Status::VALIDATION_FAILED,$validated_data->errors()->first());
+
+        $user = User::query()->create([
+            'name' => $request->name,
+            'username' => $request->username,
+            'mobile' => $request->mobile,
+            'password' => Hash::make($request->password),
+        ]);
+        $user->roles()->attach(Role::query()->where('name','user')->first()->id);
+
+        return $this->success([
+            'user' => $user->name,
+            'gym_name' => $user->gym()->first()->name ?? null,
+            'username' => $user->username,
+            'role' => $user->roles()->first()->name,
+            'token' => $user->createToken('token_base_name')->plainTextToken
+        ]);
+    }
+
 
     public function logout()
     {
@@ -67,7 +97,7 @@ class UserController extends Controller
             'mobile' => 'required|regex:/(09)[0-9]{9}/|size:11',
         ]);
         if ($validated_data->fails())
-            return $this->error(Status::VALIDATION_FAILED, $validated_data->errors());
+            return $this->error(Status::VALIDATION_FAILED, $validated_data->errors()->first());
 
 
         if (!$user = User::query()->where('mobile', $request->mobile)->first()) {
@@ -100,7 +130,7 @@ class UserController extends Controller
             ],
         ]);
         if ($validated_data->fails())
-            return $this->error(Status::VALIDATION_FAILED, $validated_data->errors());
+            return $this->error(Status::VALIDATION_FAILED, $validated_data->errors()->first());
 
         if (!$verification_code = VerificationCode::query()
             ->where('code', $request->verification_code)
