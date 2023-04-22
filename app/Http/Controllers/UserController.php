@@ -60,6 +60,7 @@ class UserController extends Controller
                 'name' => 'required',
                 'username' => 'unique:App\Models\User,username|required|min:4',
                 'mobile' => 'unique:App\Models\User,mobile|required|regex:/(09)[0-9]{9}/|size:11',
+                'verification_code' => 'required|integer',
                 'password' => [Password::required(), Password::min(4)->numbers(), 'confirmed'],
             ]);
             if ($validated_data->fails())
@@ -79,6 +80,7 @@ class UserController extends Controller
                 'gym_name' => 'required',
                 'manager_name' => 'required',
                 'mobile' => 'unique:App\Models\User,mobile|required|regex:/(09)[0-9]{9}/|size:11',
+                'verification_code' => 'required|integer',
                 'username' => 'unique:App\Models\User,username|required|min:4',
                 'address' => 'required|string|min:15',
                 'city' => ['required', Rule::in(config('settings.cities'))],
@@ -86,6 +88,22 @@ class UserController extends Controller
             ]);
             if ($validated_data->fails())
                 return $this->error(Status::VALIDATION_FAILED, $validated_data->errors()->first());
+
+            if (!$verification_code = VerificationCode::query()
+                ->where('code', $request->verification_code)
+                ->where('created_at', '>=', Carbon::now()->subMinute(4))
+                ->Where('verified_at', null)
+                ->first()) {
+                return $this->error(Status::OPERATION_ERROR, 'کد تایید نادرست است');
+            }
+
+            if ($verification_code->mobile != $request->mobile) {
+                return $this->error(Status::OPERATION_ERROR, 'شماره تلفن وارد شده صحیح نیست');
+            }
+
+            $verification_code->update([
+                'verified_at' => Carbon::now(),
+            ]);
 
             DB::beginTransaction();
             try {
