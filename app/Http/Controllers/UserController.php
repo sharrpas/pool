@@ -110,8 +110,7 @@ class UserController extends Controller
                 return $this->error(Status::OPERATION_ERROR, $e->getMessage());
             }
 
-        }
-        else{
+        } else {
             return $this->error(Status::NOT_FOUND);
         }
         return $this->success([
@@ -143,22 +142,18 @@ class UserController extends Controller
             return $this->error(Status::VALIDATION_FAILED, $validated_data->errors()->first());
 
 
-        if (!$user = User::query()->where('mobile', $request->mobile)->first()) {
-            return $this->error(Status::OPERATION_ERROR, 'شماره تماس ذخیره نشده است');
-        }
-
-        $verification_code = $user->verificationCode()->create([
+        $verification_code = VerificationCode::query()->create([
+            'mobile' => $request->mobile,
             'code' => rand(1000, 9999),
         ]);
 
         $send = smsir::Send();
         $parameter = new \Cryptommer\Smsir\Objects\Parameters('CODE', $verification_code->code);
         $parameters = array($parameter);
-        $send->Verify($user->mobile, '812390', $parameters);
+        $send->Verify($request->mobile, '812390', $parameters);
 
         return $this->success([
             'کد تایید ارسال شد',
-            'user' => $user,
         ]);
     }
 
@@ -182,7 +177,11 @@ class UserController extends Controller
             ->first()) {
             return $this->error(Status::OPERATION_ERROR, 'کد بازیابی نادرست است');
         }
-        $user = $verification_code->user()->first();
+
+
+        if (!$user = User::query()->where('mobile', $verification_code->mobile)->first()) {
+            return $this->error(Status::OPERATION_ERROR, 'حساب کاربری پیدا نشد');
+        }
 
         $verification_code->update([
             'verified_at' => Carbon::now(),
