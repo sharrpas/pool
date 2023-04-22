@@ -168,7 +168,7 @@ class UserController extends Controller
         $send = smsir::Send();
         $parameter = new \Cryptommer\Smsir\Objects\Parameters('CODE', $verification_code->code);
         $parameters = array($parameter);
-        $send->Verify($request->mobile, '812390', $parameters);
+        $send->Verify($request->mobile, '406245', $parameters);
 
         return $this->success([
             'کد تایید ارسال شد',
