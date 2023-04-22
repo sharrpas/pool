@@ -10,7 +10,7 @@ class SettingController extends Controller
     public function cities()
     {
         $cities = City::query()->select('city')->get()->map(function ($city){
-            return $city->city;
+            return ['value' => $city->city , 'label' => $city->city];
         });
         return $this->success($cities);
     }
