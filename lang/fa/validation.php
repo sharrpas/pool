@@ -130,5 +130,7 @@ return array(
         "size" => "اندازه",
         "pic" => "عکس",
         "price" => "قیمت",
+        "gym_name" => "نام باشگاه",
+        "manager_name" => "مدیر باشگاه",
     ),
 );
