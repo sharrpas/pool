@@ -157,7 +157,7 @@ class UserController extends Controller
         $send->Verify($user->mobile, '812390', $parameters);
 
         return $this->success([
-            'کد بازیابی ارسال شد',
+            'کد تایید ارسال شد',
             'user' => $user,
         ]);
     }

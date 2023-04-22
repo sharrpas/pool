@@ -3,6 +3,7 @@
 use App\Http\Controllers\Manager\ReportController;
 use App\Http\Controllers\Manager\TableController;
 use App\Http\Controllers\Manager\TaskController;
+use App\Http\Controllers\SettingController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -16,6 +17,8 @@ Route::post('signup/role/{role}', [UserController::class, 'signup']);
 Route::post('logout', [UserController::class, 'logout'])->middleware('auth:sanctum');
 Route::post('change-password', [UserController::class, 'changePass']);
 Route::post('send-code', [UserController::class, 'requestCode']);
+
+Route::get('cities',[SettingController::class,'cities']);
 
 Route::prefix('manager')->middleware(['auth:sanctum', 'role:manager'])->group(function () {
 
