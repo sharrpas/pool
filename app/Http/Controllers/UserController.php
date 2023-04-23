@@ -9,6 +9,7 @@ use App\Models\VerificationCode;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
@@ -31,7 +32,7 @@ class UserController extends Controller
 
         if (!$user = User::query()
             ->where('username', $request->username)
-            ->orWhere('mobile',$request->username)
+            ->orWhere('mobile', $request->username)
             ->first()) {
             return $this->error(Status::AUTHENTICATION_FAILED, 'نام کاربری یا رمز عبور اشتباه است');
         }
@@ -52,25 +53,84 @@ class UserController extends Controller
 
     }
 
-    public function signup(Request $request)
+    public function signup($role, Request $request)
     {
-        $validated_data = Validator::make($request->all(), [
-            'name' => 'required' ,
-            'username' => 'unique:App\Models\User,username|required',
-            'mobile' => 'unique:App\Models\User,mobile|required|regex:/(09)[0-9]{9}/|size:11',
-            'password' => [Password::required(), Password::min(4)->numbers(), 'confirmed'],
-        ]);
-        if ($validated_data->fails())
-            return $this->error(Status::VALIDATION_FAILED,$validated_data->errors()->first());
+        if ($role == "user") {
+            $validated_data = Validator::make($request->all(), [
+                'name' => 'required',
+                'username' => 'unique:App\Models\User,username|required|min:4',
+                'mobile' => 'unique:App\Models\User,mobile|required|regex:/(09)[0-9]{9}/|size:11',
+                'verification_code' => 'required|integer',
+                'password' => [Password::required(), Password::min(4)->numbers(), 'confirmed'],
+            ]);
+            if ($validated_data->fails())
+                return $this->error(Status::VALIDATION_FAILED, $validated_data->errors()->first());
 
-        $user = User::query()->create([
-            'name' => $request->name,
-            'username' => $request->username,
-            'mobile' => $request->mobile,
-            'password' => Hash::make($request->password),
-        ]);
-        $user->roles()->attach(Role::query()->where('name','user')->first()->id);
+            $user = User::query()->create([
+                'name' => $request->name,
+                'username' => $request->username,
+                'mobile' => $request->mobile,
+                'password' => Hash::make($request->password),
+            ]);
+            $user->roles()->attach(Role::query()->where('name', 'user')->first()->id);
 
+
+        } elseif ($role == "manager") {
+            $validated_data = Validator::make($request->all(), [
+                'gym_name' => 'required',
+                'manager_name' => 'required',
+                'mobile' => 'unique:App\Models\User,mobile|required|regex:/(09)[0-9]{9}/|size:11',
+                'verification_code' => 'required|integer',
+                'username' => 'unique:App\Models\User,username|required|min:4',
+                'address' => 'required|string|min:15',
+                'city' => ['required', Rule::in(config('settings.cities'))],
+                'password' => [Password::required(), Password::min(4)->numbers()/*->mixedCase()->letters()->symbols()->uncompromised()*/, 'confirmed'],
+            ]);
+            if ($validated_data->fails())
+                return $this->error(Status::VALIDATION_FAILED, $validated_data->errors()->first());
+
+            if (!$verification_code = VerificationCode::query()
+                ->where('code', $request->verification_code)
+                ->where('created_at', '>=', Carbon::now()->subMinute(4))
+                ->Where('verified_at', null)
+                ->first()) {
+                return $this->error(Status::OPERATION_ERROR, 'کد تایید نادرست است');
+            }
+
+            if ($verification_code->mobile != $request->mobile) {
+                return $this->error(Status::OPERATION_ERROR, 'شماره تلفن وارد شده صحیح نیست');
+            }
+
+            $verification_code->update([
+                'verified_at' => Carbon::now(),
+            ]);
+
+            DB::beginTransaction();
+            try {
+                $user = User::query()->create([
+                    'name' => $request->manager_name,
+                    'username' => $request->username,
+                    'mobile' => $request->mobile,
+                    'password' => Hash::make($request->password),
+                ]);
+                $user->roles()->attach(Role::query()->where('name', 'manager')->first()->id);
+
+                $user->gym()->create([
+                    'name' => $request->gym_name,
+                    'city' => $request->city,
+                    'address' => $request->address,
+                ]);
+
+                DB::commit();
+
+            } catch (\Exception $e) {
+                DB::rollback();
+                return $this->error(Status::OPERATION_ERROR, $e->getMessage());
+            }
+
+        } else {
+            return $this->error(Status::NOT_FOUND);
+        }
         return $this->success([
             'user' => $user->name,
             'gym_name' => $user->gym()->first()->name ?? null,
@@ -100,22 +160,18 @@ class UserController extends Controller
             return $this->error(Status::VALIDATION_FAILED, $validated_data->errors()->first());
 
 
-        if (!$user = User::query()->where('mobile', $request->mobile)->first()) {
-            return $this->error(Status::OPERATION_ERROR, 'شماره تماس ذخیره نشده است');
-        }
-
-        $verification_code = $user->verificationCode()->create([
+        $verification_code = VerificationCode::query()->create([
+            'mobile' => $request->mobile,
             'code' => rand(1000, 9999),
         ]);
 
         $send = smsir::Send();
         $parameter = new \Cryptommer\Smsir\Objects\Parameters('CODE', $verification_code->code);
         $parameters = array($parameter);
-        $send->Verify($user->mobile, '812390', $parameters);
+        $send->Verify($request->mobile, '406245', $parameters);
 
         return $this->success([
-            'کد بازیابی ارسال شد',
-            'user' => $user,
+            'کد تایید ارسال شد',
         ]);
     }
 
@@ -135,11 +191,15 @@ class UserController extends Controller
         if (!$verification_code = VerificationCode::query()
             ->where('code', $request->verification_code)
             ->where('created_at', '>=', Carbon::now()->subMinute(4))
-            ->Where('verified_at',null)
+            ->Where('verified_at', null)
             ->first()) {
             return $this->error(Status::OPERATION_ERROR, 'کد بازیابی نادرست است');
         }
-        $user = $verification_code->user()->first();
+
+
+        if (!$user = User::query()->where('mobile', $verification_code->mobile)->first()) {
+            return $this->error(Status::OPERATION_ERROR, 'حساب کاربری پیدا نشد');
+        }
 
         $verification_code->update([
             'verified_at' => Carbon::now(),

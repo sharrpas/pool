@@ -37,7 +37,7 @@ return array(
     "email" => "فرمت :attribute معتبر نیست.",
     "exists" => ":attribute انتخاب شده، معتبر نیست.",
     "image" => ":attribute باید تصویر باشد.",
-    "in" => ":attribute انتخاب شده، معتبر نیست.",
+    "in" => ":attribute انتخاب شده، تعریف نشده است لطفا با پشتیبانی تماس بگیرید.",
     "integer" => ":attribute باید نوع داده ای عددی (integer) باشد.",
     "ip" => ":attribute باید IP آدرس معتبر باشد.",
     "max" => array(
@@ -130,5 +130,8 @@ return array(
         "size" => "اندازه",
         "pic" => "عکس",
         "price" => "قیمت",
+        "gym_name" => "نام باشگاه",
+        "manager_name" => "مدیر باشگاه",
+        "verification_code" => "کد تایید",
     ),
 );
