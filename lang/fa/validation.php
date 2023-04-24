@@ -55,6 +55,13 @@ return array(
     ),
     "not_in" => ":attribute انتخاب شده، معتبر نیست.",
     "numeric" => ":attribute باید شامل عدد باشد.",
+    'password' => [
+        'letters' => ':attribute باید حداقل شامل یک حرف باشد.',
+        'mixed' => ':attribute باید حداقل یک حرف بزرگ و یک حرف کوچک داشته باشد.',
+        'numbers' => ':attribute باید حداقل یک عدد داشته باشد.',
+        'symbols' => ':attribute باید حداقل یک نماد داشته باشد.',
+        'uncompromised' => 'داده شده :attribute در یک نشت داده ظاهر شده است. لطفا متفاوت انتخاب کنید :attribute.',
+    ],
     "regex" => ":attribute یک فرمت معتبر نیست",
     "required" => "فیلد :attribute الزامی است",
     "required_if" => "فیلد :attribute هنگامی که :other برابر با :value است، الزامیست.",
