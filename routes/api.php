@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Manager\ProfileController;
 use App\Http\Controllers\Manager\ReportController;
 use App\Http\Controllers\Manager\TableController;
 use App\Http\Controllers\Manager\TaskController;
@@ -40,5 +41,7 @@ Route::prefix('manager')->middleware(['auth:sanctum', 'role:manager'])->group(fu
         Route::post('income', [ReportController::class, 'Income']);
     });
 
+    Route::get('profile',[ProfileController::class,'show']);
+    Route::post('profile',[ProfileController::class,'update']);
 
 });

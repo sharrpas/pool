@@ -82,7 +82,7 @@ class UserController extends Controller
                 'mobile' => 'unique:App\Models\User,mobile|required|regex:/(09)[0-9]{9}/|size:11',
                 'verification_code' => 'required|integer',
                 'username' => 'unique:App\Models\User,username|required|min:4',
-                'address' => 'required|string|min:15',
+//                'address' => 'required|string|min:15',
                 'city' => ['required', Rule::in(config('settings.cities'))],
                 'password' => [Password::required(), Password::min(4)->numbers()/*->mixedCase()->letters()->symbols()->uncompromised()*/, 'confirmed'],
             ]);

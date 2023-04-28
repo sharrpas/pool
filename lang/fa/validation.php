@@ -140,5 +140,8 @@ return array(
         "gym_name" => "نام باشگاه",
         "manager_name" => "مدیر باشگاه",
         "verification_code" => "کد تایید",
+        "avatar" => "آواتار",
+        "image" => "عکس",
+        "about" => "درباره",
     ),
 );
