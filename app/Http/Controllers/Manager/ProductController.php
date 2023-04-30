@@ -17,6 +17,8 @@ class ProductController extends Controller
     {
         $products = auth()->user()->gym()->first()->products()->get();
         return $this->success(ProductResource::collection($products));
+
+        //todo add gym name and address in response
     }
 
     public function show(Product $product)

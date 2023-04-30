@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Manager\ProductController;
+use App\Http\Controllers\Manager\BuffetController;
 use App\Http\Controllers\Manager\ProfileController;
 use App\Http\Controllers\Manager\ReportController;
 use App\Http\Controllers\Manager\TableController;
@@ -20,7 +21,7 @@ Route::post('logout', [UserController::class, 'logout'])->middleware('auth:sanct
 Route::post('change-password', [UserController::class, 'changePass']);
 Route::post('send-code', [UserController::class, 'requestCode']);
 
-Route::get('cities',[SettingController::class,'cities']);
+Route::get('cities', [SettingController::class, 'cities']);
 
 Route::prefix('manager')->middleware(['auth:sanctum', 'role:manager'])->group(function () {
 
@@ -42,16 +43,24 @@ Route::prefix('manager')->middleware(['auth:sanctum', 'role:manager'])->group(fu
         Route::post('income', [ReportController::class, 'Income']);
     });
 
-    Route::get('profile',[ProfileController::class,'show']);
-    Route::post('profile',[ProfileController::class,'update']);
+    Route::get('profile', [ProfileController::class, 'show']);
+    Route::post('profile', [ProfileController::class, 'update']);
 
     Route::prefix('products')->group(function () {
-        Route::get('/',[ProductController::class,'index']);
-        Route::get('/{product}',[ProductController::class,'show']);
-        Route::post('/',[ProductController::class,'store']);
-        Route::post('/{product}/update',[ProductController::class,'update']);
-        Route::delete('/{product}/delete',[ProductController::class,'delete']);
+        Route::get('/', [ProductController::class, 'index']);
+        Route::get('/{product}', [ProductController::class, 'show']);
+        Route::post('/', [ProductController::class, 'store']);
+        Route::post('/{product}/update', [ProductController::class, 'update']);
+        Route::delete('/{product}/delete', [ProductController::class, 'delete']);
+    });
+
+    Route::prefix('buffets')->group(function () {
+        Route::get('/', [BuffetController::class, 'index']);
+        Route::get('/{buffet}', [BuffetController::class, 'show']);
+        Route::post('/', [BuffetController::class, 'store']);
+        Route::post('/{buffet}/update', [BuffetController::class, 'update']);
+        Route::delete('/{buffet}/delete', [BuffetController::class, 'destroy']);
     });
 
 });
-//buffet
+

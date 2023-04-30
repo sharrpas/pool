@@ -30,4 +30,9 @@ class Gym extends Model
     {
         return $this->hasMany(Product::class);
     }
+
+    public function buffets()
+    {
+        return $this->hasMany(Buffet::class);
+    }
 }
