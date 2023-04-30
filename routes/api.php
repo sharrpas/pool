@@ -49,6 +49,8 @@ Route::prefix('manager')->middleware(['auth:sanctum', 'role:manager'])->group(fu
         Route::get('/',[ProductController::class,'index']);
         Route::get('/{product}',[ProductController::class,'show']);
         Route::post('/',[ProductController::class,'store']);
+        Route::post('/{product}/update',[ProductController::class,'update']);
+        Route::delete('/{product}/delete',[ProductController::class,'delete']);
     });
 
 });

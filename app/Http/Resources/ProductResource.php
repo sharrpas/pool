@@ -18,6 +18,7 @@ class ProductResource extends JsonResource
         $images = explode(',', $this->images);
 
         return [
+            'id' => $this->id,
             'title' => $this->title,
             'description' => $this->description,
             'price' => $this->price,
