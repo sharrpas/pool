@@ -25,4 +25,9 @@ class Gym extends Model
     {
         return $this->hasMany(Table::class);
     }
+
+    public function products()
+    {
+        return $this->hasMany(Product::class);
+    }
 }

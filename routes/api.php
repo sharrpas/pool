@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Manager\ProductController;
 use App\Http\Controllers\Manager\ProfileController;
 use App\Http\Controllers\Manager\ReportController;
 use App\Http\Controllers\Manager\TableController;
@@ -44,4 +45,9 @@ Route::prefix('manager')->middleware(['auth:sanctum', 'role:manager'])->group(fu
     Route::get('profile',[ProfileController::class,'show']);
     Route::post('profile',[ProfileController::class,'update']);
 
+    Route::prefix('products')->group(function () {
+        Route::post('/',[ProductController::class,'store']);
+    });
+
 });
+//buffet

@@ -142,6 +142,7 @@ return array(
         "verification_code" => "کد تایید",
         "avatar" => "آواتار",
         "image" => "عکس",
+        "images.*" => "عکس",
         "about" => "درباره",
     ),
 );
