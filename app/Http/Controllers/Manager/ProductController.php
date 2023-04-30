@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Manager;
 
 use App\Constants\Status;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\ProductResource;
+use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
@@ -13,12 +15,16 @@ class ProductController extends Controller
 {
     public function index()
     {
-
+        $products = auth()->user()->gym()->first()->products()->get();
+        return $this->success(ProductResource::collection($products));
     }
 
-    public function show()
+    public function show(Product $product)
     {
+        if ($product->gym()->first()->manager_id != auth()->user()->id)
+            return $this->error(Status::AUTHENTICATION_FAILED);
 
+        return $this->success(ProductResource::make($product));
     }
 
     public function store(Request $request)

@@ -46,6 +46,8 @@ Route::prefix('manager')->middleware(['auth:sanctum', 'role:manager'])->group(fu
     Route::post('profile',[ProfileController::class,'update']);
 
     Route::prefix('products')->group(function () {
+        Route::get('/',[ProductController::class,'index']);
+        Route::get('/{product}',[ProductController::class,'show']);
         Route::post('/',[ProductController::class,'store']);
     });
 
