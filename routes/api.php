@@ -33,6 +33,8 @@ Route::prefix('manager')->middleware(['auth:sanctum', 'role:manager'])->group(fu
 
     Route::post('open/table/{table}', [TaskController::class, 'open']);
     Route::post('close/table/{table}', [TaskController::class, 'close']);
+    Route::post('table/{table}/add-buffet/{buffet}', [TaskController::class, 'add_buffet']);
+    Route::post('table/{table}/remove-buffet/{buffet}', [TaskController::class, 'remove_buffet']);
 
     Route::get('tasks/table/{table}', [TaskController::class, 'tasks']);
     Route::post('pay/task/{task}', [TaskController::class, 'pay']);
@@ -60,6 +62,11 @@ Route::prefix('manager')->middleware(['auth:sanctum', 'role:manager'])->group(fu
         Route::post('/', [BuffetController::class, 'store']);
         Route::post('/{buffet}/update', [BuffetController::class, 'update']);
         Route::delete('/{buffet}/delete', [BuffetController::class, 'destroy']);
+    });
+
+    Route::prefix('users')->group(function () {
+        Route::get('/',[\App\Http\Controllers\Manager\UserController::class,'index']);
+        Route::post('define-table/{table}',[\App\Http\Controllers\Manager\UserController::class,'table_for_user']);
     });
 
 });
