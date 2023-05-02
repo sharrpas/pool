@@ -84,7 +84,6 @@ class TaskController extends Controller
 
     public function tasks(Table $table)
     {
-        //todo return buffet
         if ($table->gym()->first()->manager_id != auth()->user()->id)
             return $this->error(Status::AUTHENTICATION_FAILED);
 
