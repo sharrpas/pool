@@ -66,6 +66,22 @@ class UserController extends Controller
             if ($validated_data->fails())
                 return $this->error(Status::VALIDATION_FAILED, $validated_data->errors()->first());
 
+            if (!$verification_code = VerificationCode::query()
+                ->where('code', $request->verification_code)
+                ->where('created_at', '>=', Carbon::now()->subMinute(4))
+                ->Where('verified_at', null)
+                ->first()) {
+                return $this->error(Status::OPERATION_ERROR, 'کد تایید نادرست است');
+            }
+
+            if ($verification_code->mobile != $request->mobile) {
+                return $this->error(Status::OPERATION_ERROR, 'شماره تلفن وارد شده صحیح نیست');
+            }
+
+            $verification_code->update([
+                'verified_at' => Carbon::now(),
+            ]);
+
             $user = User::query()->create([
                 'name' => $request->name,
                 'username' => $request->username,
