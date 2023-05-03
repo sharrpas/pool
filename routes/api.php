@@ -7,6 +7,7 @@ use App\Http\Controllers\Manager\ReportController;
 use App\Http\Controllers\Manager\TableController;
 use App\Http\Controllers\Manager\TaskController;
 use App\Http\Controllers\SettingController;
+use App\Http\Controllers\User\DashboardController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -74,6 +75,8 @@ Route::prefix('manager')->middleware(['auth:sanctum', 'role:manager'])->group(fu
 Route::prefix('user')->middleware(['auth:sanctum', 'role:user'])->group(function () {
 
     Route::get('profile', [\App\Http\Controllers\User\ProfileController::class, 'show']);
+
+    Route::get('dashboard/{city}',[DashboardController::class,'index']);
 
 
 });
