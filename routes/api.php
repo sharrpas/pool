@@ -71,3 +71,9 @@ Route::prefix('manager')->middleware(['auth:sanctum', 'role:manager'])->group(fu
 
 });
 
+Route::prefix('user')->middleware(['auth:sanctum', 'role:user'])->group(function () {
+
+    Route::get('profile', [\App\Http\Controllers\User\ProfileController::class, 'show']);
+
+
+});
