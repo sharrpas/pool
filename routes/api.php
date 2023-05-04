@@ -66,9 +66,15 @@ Route::prefix('manager')->middleware(['auth:sanctum', 'role:manager'])->group(fu
     });
 
     Route::prefix('users')->group(function () {
-        Route::get('/',[\App\Http\Controllers\Manager\UserController::class,'index']);
-        Route::post('define-table/{table}',[\App\Http\Controllers\Manager\UserController::class,'table_for_user']);
+        Route::get('/', [\App\Http\Controllers\Manager\UserController::class, 'index']);
+        Route::post('define-table/{table}', [\App\Http\Controllers\Manager\UserController::class, 'table_for_user']);
     });
+
+});
+
+Route::prefix('user')->group(function () {
+
+    Route::get('dashboard/gyms/{city}', [DashboardController::class, 'index']);
 
 });
 
@@ -76,7 +82,6 @@ Route::prefix('user')->middleware(['auth:sanctum', 'role:user'])->group(function
 
     Route::get('profile', [\App\Http\Controllers\User\ProfileController::class, 'show']);
 
-    Route::get('dashboard/{city}',[DashboardController::class,'index']);
-
+    Route::get('dashboard/gym/{gym}',[DashboardController::class,'show']);
 
 });

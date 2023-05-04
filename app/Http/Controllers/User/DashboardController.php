@@ -33,4 +33,9 @@ class DashboardController extends Controller
         $city == 'all' ? $gyms = Gym::query()->orderBy('city')->get() : $gyms = Gym::query()->where('city',$city)->get();
         return $this->success($gyms);
     }
+
+    public function show(Gym $gym)
+    {
+        return $this->success(GymResource::make($gym->load('tables')));
+    }
 }
