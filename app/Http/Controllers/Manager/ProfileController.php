@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Manager;
 use App\Constants\Status;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\GymResource;
+use App\Models\City;
 use App\Models\Gym;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -31,12 +32,15 @@ class ProfileController extends Controller
             'image' => 'mimes:jpeg,png,jpg',
             'lat' => 'string',
             'long' => 'string',
-            'city' => [Rule::in(config('settings.cities'))],
+            'city' => 'string',
         ]);
         if ($validated_data->fails())
             return $this->error(Status::VALIDATION_FAILED, $validated_data->errors()->first());
 
         $gym = auth()->user()->gym()->first();
+
+        $request->city ? $city = City::query()->where('city',$request->city)->first()->id : $city = $gym->city_id;
+
 
         if ($request->image) {
             Storage::delete('images/' . $gym->image);
@@ -57,7 +61,7 @@ class ProfileController extends Controller
             'image' => $request->image ? $ImageName : $gym->image,
             'lat' => $request->lat ?? $gym->lat,
             'long' => $request->long ?? $gym->long,
-            'city' => $request->city ?? $gym->city,
+            'city_id' => $city,
         ]);
 
         return $this->success('تغییرات اعمال شد');

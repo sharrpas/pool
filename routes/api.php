@@ -8,6 +8,7 @@ use App\Http\Controllers\Manager\TableController;
 use App\Http\Controllers\Manager\TaskController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\User\DashboardController;
+use App\Http\Controllers\User\StoreController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -73,15 +74,15 @@ Route::prefix('manager')->middleware(['auth:sanctum', 'role:manager'])->group(fu
 });
 
 Route::prefix('user')->group(function () {
-
-    Route::get('dashboard/gyms/{city}', [DashboardController::class, 'index']);
-
+    Route::get('dashboard/gyms/city/{city}', [DashboardController::class, 'index']);
 });
 
 Route::prefix('user')->middleware(['auth:sanctum', 'role:user'])->group(function () {
 
     Route::get('profile', [\App\Http\Controllers\User\ProfileController::class, 'show']);
-
     Route::get('dashboard/gym/{gym}',[DashboardController::class,'show']);
+
+    Route::get('store/products/city/{city}',[StoreController::class,'index']);
+    Route::get('store/product/{product}',[StoreController::class,'show']);
 
 });

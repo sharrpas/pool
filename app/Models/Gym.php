@@ -35,4 +35,9 @@ class Gym extends Model
     {
         return $this->hasMany(Buffet::class);
     }
+
+    public function city()
+    {
+        return $this->belongsTo(City::class);
+    }
 }

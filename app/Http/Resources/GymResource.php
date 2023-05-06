@@ -20,7 +20,7 @@ class GymResource extends JsonResource
             "manager_id" => $this->manager_id,
             "name" => $this->name,
             "about" => $this->about,
-            "city" => $this->city,
+            "city" => $this->city()->first()->city,
             "address" => $this->address,
             "avatar" => Storage::url('images/'. $this->avatar),
             "image" => Storage::url('images/'. $this->image),

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Constants\Status;
+use App\Models\City;
 use App\Models\Role;
 use App\Models\User;
 use App\Models\VerificationCode;
@@ -99,11 +100,14 @@ class UserController extends Controller
                 'verification_code' => 'required|integer',
                 'username' => 'unique:App\Models\User,username|required|min:4',
 //                'address' => 'required|string|min:15',
-                'city' => ['required', Rule::in(config('settings.cities'))],
+                'city' => ['required'],
                 'password' => [Password::required(), Password::min(4)->numbers()/*->mixedCase()->letters()->symbols()->uncompromised()*/, 'confirmed'],
             ]);
             if ($validated_data->fails())
                 return $this->error(Status::VALIDATION_FAILED, $validated_data->errors()->first());
+
+            if (!$city = City::query()->where('city',$request->city)->first())
+                return $this->error(Status::NOT_FOUND,'شهر مورد نظر پیدا نشد');
 
             if (!$verification_code = VerificationCode::query()
                 ->where('code', $request->verification_code)
@@ -121,6 +125,7 @@ class UserController extends Controller
                 'verified_at' => Carbon::now(),
             ]);
 
+
             DB::beginTransaction();
             try {
                 $user = User::query()->create([
@@ -133,7 +138,7 @@ class UserController extends Controller
 
                 $user->gym()->create([
                     'name' => $request->gym_name,
-                    'city' => $request->city,
+                    'city_id' => $city->id,
                     'address' => $request->address,
                 ]);
 
