@@ -17,15 +17,20 @@ class TableTaskResource extends JsonResource
     public function toArray($request)
     {
 
-        $task_buffets = array_map('intval', explode(',', $this->buffet));
+        if ($this->buffet != null) {
+            $task_buffets = array_map('intval', explode(',', $this->buffet));
 
-        $buffets = Buffet::query()->whereIn('id',$task_buffets)->get();
-        $ids = $buffets->pluck('id')->toArray();
-        $buffetsInArray = BuffetResource::collection($buffets);
-        $finalBuffets = collect($task_buffets)->map(function ($id) use($ids, $buffetsInArray) {
-            return $buffetsInArray[array_search($id, array_values($ids))];
-        });
-
+            $buffets = Buffet::query()->whereIn('id', $task_buffets)->get();
+            $ids = $buffets->pluck('id')->toArray();
+            $buffetsInArray = BuffetResource::collection($buffets);
+            $finalBuffets = collect($task_buffets)->map(function ($id) use ($ids, $buffetsInArray) {
+                return $buffetsInArray[array_search($id, array_values($ids))];
+            });
+        }
+        else
+        {
+            $finalBuffets = null;
+        }
         $playerr = ($this->player()->first() ?? ['name' => 'مهمان','username' => 'Guest'])['username'];
 
         return [
