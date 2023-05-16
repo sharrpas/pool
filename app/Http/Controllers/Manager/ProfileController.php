@@ -17,9 +17,8 @@ class ProfileController extends Controller
 {
     public function show()
     {
-        //todo return manager info
         $gym = auth()->user()->gym()->first();
-        return $this->success(GymResource::make($gym));
+        return $this->success(GymResource::make($gym->load('manager')));
     }
 
     public function update(Request $request)

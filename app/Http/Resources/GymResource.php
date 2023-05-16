@@ -26,6 +26,7 @@ class GymResource extends JsonResource
             "image" => Storage::url('images/'. $this->image),
             "lat" => $this->lat,
             "long" => $this->long,
+            "manager" => $this->whenLoaded('manager'),
             'tables' => $this->whenLoaded('tables'),
         ];
     }
