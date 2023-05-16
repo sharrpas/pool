@@ -36,7 +36,7 @@ class DashboardController extends Controller
         if ($city)
             $gyms = $city->gyms()->get();
         else
-            $gyms = Gym::query()->orderBy('city_id')->get();
+            $gyms = Gym::query()->orderBy('city_id')->inRandomOrder()->get();
 
         return $this->success(GymResource::collection($gyms));
     }
