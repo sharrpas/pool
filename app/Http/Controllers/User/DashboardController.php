@@ -31,14 +31,23 @@ class DashboardController extends Controller
 //            array_push($result[$gym->city],GymResource::make($gym));
 //        });
 
-        $city = City::query()->where('city',$city)->first();
+        $city = City::query()->where('city', $city)->first();
 
         if ($city)
-            $gyms = $city->gyms()->get();
-        else
-            $gyms = Gym::query()->orderBy('city_id')->inRandomOrder()->get();
-
-        return $this->success(GymResource::collection($gyms));
+            $gyms = GymResource::collection($city->gyms()->inRandomOrder()->get());
+        else {
+            $gyms = Gym::query()->groupBy('city_id')->inRandomOrder()->get()
+                ->map(function ($gym) {
+                    return $gym->city()->first();
+                })
+                ->map(function ($city) {
+                    return [
+                        'city' => $city->city,
+                        'gyms' => GymResource::collection($city->gyms()->get())
+                    ];
+                });
+        }
+        return $this->success($gyms);
     }
 
     public function show(Gym $gym)

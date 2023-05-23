@@ -3,6 +3,7 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
 class GymResource extends JsonResource
@@ -26,6 +27,9 @@ class GymResource extends JsonResource
             "image" => Storage::url('images/'. $this->image),
             "lat" => $this->lat,
             "long" => $this->long,
+            "tables_count" => $this->tables()->select(
+                DB::raw('count(*) as count'),
+            )->first()->count,
             "manager" => $this->whenLoaded('manager'),
             'tables' => $this->whenLoaded('tables'),
         ];
