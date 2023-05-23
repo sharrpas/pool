@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Password;
+use Nette\Utils\Random;
 use function Symfony\Component\String\u;
 use Cryptommer\Smsir\Smsir;
 
@@ -140,6 +141,7 @@ class UserController extends Controller
                     'name' => $request->gym_name,
                     'city_id' => $city->id,
                     'address' => $request->address,
+                    'image' => mt_rand(1,10),
                 ]);
 
                 DB::commit();
