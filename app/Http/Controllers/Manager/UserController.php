@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Manager;
 
 use App\Constants\Status;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\UserResource;
 use App\Models\Table;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -18,7 +19,7 @@ class UserController extends Controller
             $q->where('name', 'user');
         })->select(['name', 'username'])->get();
         //todo  need pagination ????
-        return $this->success($users);
+        return $this->success(UserResource::collection($users));
     }
 
     public function table_for_user(Table $table,Request $request)
