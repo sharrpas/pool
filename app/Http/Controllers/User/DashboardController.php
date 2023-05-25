@@ -15,21 +15,6 @@ class DashboardController extends Controller
 {
     public function index($city)
     {
-//        $array = config('settings.cities');
-//        array_push($array, 'all');
-//        $validated_data = Validator::make(['city' => $city], [
-//            'city' => ['required', Rule::in($array)],
-//        ]);
-//        if ($validated_data->fails())
-//            return $this->error(Status::VALIDATION_FAILED, $validated_data->errors()->first());
-
-//        $result = [];
-//        foreach (config('settings.cities') as $c){
-//            $result[$c] = [];
-//        }
-//        Gym::query()->orderBy('city')->get()->map(function ($gym) use (&$result){
-//            array_push($result[$gym->city],GymResource::make($gym));
-//        });
 
         $city = City::query()->where('city', $city)->first();
 
@@ -43,7 +28,7 @@ class DashboardController extends Controller
                 ->map(function ($city) {
                     return [
                         'city' => $city->city,
-                        'gyms' => GymResource::collection($city->gyms()->get())
+                        'gyms' => GymResource::collection($city->gyms()->inRandomOrder()->get())
                     ];
                 });
         }

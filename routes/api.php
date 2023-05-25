@@ -74,15 +74,18 @@ Route::prefix('manager')->middleware(['auth:sanctum', 'role:manager'])->group(fu
 });
 
 Route::prefix('user')->group(function () {
+
     Route::get('dashboard/gyms/city/{city}', [DashboardController::class, 'index']);
+
+    Route::middleware(['auth:sanctum', 'role:user'])->group(function (){
+
+        Route::get('profile', [\App\Http\Controllers\User\ProfileController::class, 'show']);
+        Route::get('dashboard/gym/{gym}',[DashboardController::class,'show']);
+
+        Route::get('store/products/city/{city}',[StoreController::class,'index']);
+        Route::get('store/product/{product}',[StoreController::class,'show']);
+
+    });
 });
 
-Route::prefix('user')->middleware(['auth:sanctum', 'role:user'])->group(function () {
 
-    Route::get('profile', [\App\Http\Controllers\User\ProfileController::class, 'show']);
-    Route::get('dashboard/gym/{gym}',[DashboardController::class,'show']);
-
-    Route::get('store/products/city/{city}',[StoreController::class,'index']);
-    Route::get('store/product/{product}',[StoreController::class,'show']);
-
-});
