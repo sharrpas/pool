@@ -28,11 +28,21 @@ class UserController extends Controller
             return $this->error(Status::AUTHENTICATION_FAILED);
 
         $validated_data = Validator::make($request->all(), [
-            'username' => 'required|string',   //|exists:App\Models\User,username
+            'username' => 'string',   //|exists:App\Models\User,username
         ]);
 
         if ($validated_data->fails())
             return $this->error(Status::VALIDATION_FAILED, $validated_data->errors()->first());
+
+        if (!$task = $table->tasks()->where('closed_at', null)->first())
+            return $this->error(Status::NOT_FOUND, 'میز هنوز باز نشده');
+
+        if (!$request->username) {
+            $task->update([
+                'player_id' => null,
+            ]);
+            return $this->success('میز '.$table->name.' برای بازیکن مهمان تعریف شد');
+        }
 
         if (!$user = User::query()->where('username',$request->username)->first())
             return $this->error(Status::NOT_FOUND,'نام کاربری مورد نظر پیدا نشد');
@@ -40,8 +50,6 @@ class UserController extends Controller
         if (!$user->hasRole('user'))
             return $this->error(Status::NOT_FOUND,'نام کاربری مورد نظر در لیست کاربران پیدا نشد');
 
-        if (!$task = $table->tasks()->where('closed_at', null)->first())
-            return $this->error(Status::NOT_FOUND, 'میز هنوز باز نشده');
 
         $task->update([
             'player_id' => $user->id,
