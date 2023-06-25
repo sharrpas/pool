@@ -80,6 +80,7 @@ Route::prefix('user')->group(function () {
     Route::middleware(['auth:sanctum', 'role:user'])->group(function (){
 
         Route::get('profile', [\App\Http\Controllers\User\ProfileController::class, 'show']);
+        Route::post('profile', [\App\Http\Controllers\User\ProfileController::class, 'update']);
         Route::get('dashboard/gym/{gym}',[DashboardController::class,'show']);
 
         Route::get('store/products/city/{city}',[StoreController::class,'index']);
