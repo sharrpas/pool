@@ -83,7 +83,7 @@ Route::prefix('user')->group(function () {
         Route::post('profile', [\App\Http\Controllers\User\ProfileController::class, 'update']);
         Route::get('dashboard/gym/{gym}',[DashboardController::class,'show']);
 
-        Route::get('store/products/city/{city}',[StoreController::class,'index']);
+        Route::get('store/products',[StoreController::class,'index']);
         Route::get('store/product/{product}',[StoreController::class,'show']);
 
     });
