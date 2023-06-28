@@ -19,6 +19,7 @@ class TableTaskResource extends JsonResource
 
         if ($this->buffet != null) {
             $task_buffets = array_map('intval', explode(',', $this->buffet));
+            sort($task_buffets);
 
             $buffets = Buffet::query()->whereIn('id', $task_buffets)->get();
             $ids = $buffets->pluck('id')->toArray();

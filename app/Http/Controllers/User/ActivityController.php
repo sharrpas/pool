@@ -4,6 +4,7 @@ namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\User\TableTaskResource;
+use App\Models\TableTask;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -37,8 +38,8 @@ class ActivityController extends Controller
         return $this->success(($activities));
     }
 
-    public function show()
+    public function show(TableTask $activity)
     {
-        return $this->success();
+        return $this->success(\App\Http\Resources\TableTaskResource::make($activity));
     }
 }
