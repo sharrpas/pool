@@ -7,6 +7,7 @@ use App\Http\Controllers\Manager\ReportController;
 use App\Http\Controllers\Manager\TableController;
 use App\Http\Controllers\Manager\TaskController;
 use App\Http\Controllers\SettingController;
+use App\Http\Controllers\User\ActivityController;
 use App\Http\Controllers\User\DashboardController;
 use App\Http\Controllers\User\StoreController;
 use App\Http\Controllers\UserController;
@@ -85,6 +86,9 @@ Route::prefix('user')->group(function () {
 
         Route::get('store/products',[StoreController::class,'index']);
         Route::get('store/product/{product}',[StoreController::class,'show']);
+
+        Route::get('activities',[ActivityController::class,'index']);
+        Route::get('activity/{activity}',[ActivityController::class,'show']);
 
     });
 });

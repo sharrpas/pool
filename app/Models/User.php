@@ -67,4 +67,9 @@ class User extends Authenticatable
         return $this->hasMany(VerificationCode::class);
     }
 
+    public function tasks()
+    {
+        return $this->hasMany(TableTask::class,'player_id');
+    }
+
 }
