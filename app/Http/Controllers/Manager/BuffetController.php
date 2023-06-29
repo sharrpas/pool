@@ -36,8 +36,8 @@ class BuffetController extends Controller
     {
         $validated_data = Validator::make($request->all(), [
             'title' => 'required|string',
-            'image' => 'mimes:jpeg,png,jpg',
-            'pic' => 'string',
+            'image' => 'mimes:jpeg,png,jpg|required_without:pic',
+            'pic' => 'string|required_without:image',
             'price' => 'required|integer',
         ]);
 

@@ -135,7 +135,7 @@ return array(
         "time" => "زمان",
         "available" => "موجود",
         "size" => "اندازه",
-        "pic" => "عکس",
+        "pic" => "تصویر",
         "price" => "قیمت",
         "gym_name" => "نام باشگاه",
         "manager_name" => "مدیر باشگاه",
