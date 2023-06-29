@@ -31,7 +31,7 @@ class TableController extends Controller
     {
         $validated_data = Validator::make($request->all(), [
             'name' => 'required|string',
-//            'pic' => 'required|mimes:jpeg,png,jpg',
+//            'pic' => 'required|mimes:jpeg,png,jpg|max:10240',
             'pic' => 'required',
             'price' => 'required|integer'
         ]);

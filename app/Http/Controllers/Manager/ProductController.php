@@ -34,7 +34,7 @@ class ProductController extends Controller
         $validated_data = Validator::make($request->all(), [
             'title' => 'required|string',
             'images' => 'required|array',
-            'images.*' => 'mimes:jpeg,png,jpg',
+            'images.*' => 'mimes:jpeg,png,jpg|max:10240',
             'description' => 'required|string',
             'price' => 'required|integer',
         ]);
@@ -78,7 +78,7 @@ class ProductController extends Controller
         $validated_data = Validator::make($request->all(), [
             'title' => 'string',
             'images' => 'array',
-            'images.*' => 'mimes:jpeg,png,jpg',
+            'images.*' => 'mimes:jpeg,png,jpg|max:10240',
             'description' => 'string',
             'price' => 'integer',
         ]);

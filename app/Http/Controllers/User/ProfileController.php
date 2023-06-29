@@ -22,7 +22,7 @@ class ProfileController extends Controller
         $validated_data = Validator::make($request->all(), [
             'name' => 'string',
             'username' => 'unique:App\Models\User,username|min:4',
-            'avatar' => 'mimes:jpeg,png,jpg',
+            'avatar' => 'mimes:jpeg,png,jpg|max:10240',
 
         ]);
         if ($validated_data->fails())
