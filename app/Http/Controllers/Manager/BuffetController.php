@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
+use Nette\Utils\Image;
 
 class BuffetController extends Controller
 {
@@ -108,6 +109,7 @@ class BuffetController extends Controller
         if ($validated_data->fails())
             return $this->error(Status::VALIDATION_FAILED, $validated_data->errors()->first());
 
+        $ImageName = null;
         if ($request->image) {
             Storage::delete('images/buffets/' . $request->image);
             $ImageName = date('Ymdhis') . rand(100, 999) . '.jpg';
@@ -117,8 +119,8 @@ class BuffetController extends Controller
 
         $buffet->update([
             'title' => $request->title ?? $buffet->title,
-            'image' => $ImageName ?? $buffet->image,
-            'pic' => $request->pic ?? null,
+            'pic' => $ImageName ? null : $request->pic,
+            'image' => $request->pic ? null : $ImageName,
             'price' => $request->price ?? $buffet->price,
         ]);
 
