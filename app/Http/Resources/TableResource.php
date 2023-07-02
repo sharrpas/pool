@@ -3,6 +3,8 @@
 namespace App\Http\Resources;
 
 use App\Models\Buffet;
+use App\Models\TableTask;
+use Illuminate\Console\View\Components\Task;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Carbon;
 
@@ -11,12 +13,12 @@ class TableResource extends JsonResource
     /**
      * Transform the resource into an array.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
      * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
      */
     public function toArray($request)
     {
-
+        $playerr = null;
         $task = $this->tasks()->where('closed_at', null)->first() ?? null;
         if ($task) {
             $now = Carbon::now();
@@ -34,9 +36,9 @@ class TableResource extends JsonResource
                     return $buffetsInArray[array_search($id, array_values($ids))];
                 });
             }
+            $playerr = ($task->player()->first() ?? null);
+
         }
-
-
 
 
         return [
@@ -49,7 +51,9 @@ class TableResource extends JsonResource
 
             'price_so_far' => $play_price ?? null,
             'duration' => $play_time ?? null,
-            'opened_at' => $task ? substr($task->opened_at, 11, 5) : null ,
+            'opened_at' => $task ? substr($task->opened_at, 11, 5) : null,
+
+            'player' => $playerr? UserResource::make($playerr) : null,
 
             'buffet' => $finalBuffets ?? null,
 
