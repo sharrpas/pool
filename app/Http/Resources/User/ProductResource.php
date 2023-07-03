@@ -25,7 +25,7 @@ class ProductResource extends JsonResource
             'images' => array_map(function ($image) {
                 return Storage::url('images/stores/' . $image);
             }, $images),
-            'city' => $this->whenLoaded('gym')->city->city,
+            'mobile' => $this->whenLoaded('gym')->manager->mobile,
             'gym' => $this->whenLoaded('gym'),
         ];
     }
