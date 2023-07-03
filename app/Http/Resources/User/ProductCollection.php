@@ -2,10 +2,11 @@
 
 namespace App\Http\Resources\User;
 
+use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 use Illuminate\Support\Facades\Storage;
 
-class ProductCollection extends ResourceCollection
+class ProductCollection extends JsonResource//***
 {
     /**
      * Transform the resource collection into an array.
