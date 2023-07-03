@@ -8,6 +8,7 @@ use App\Http\Resources\TableTaskResource;
 use App\Models\Buffet;
 use App\Models\Table;
 use App\Models\TableTask;
+use App\Services\GetBuffet;
 use Illuminate\Console\View\Components\Task;
 use Illuminate\Support\Carbon;
 use function GuzzleHttp\Promise\task;
@@ -43,6 +44,10 @@ class TaskController extends Controller
 
     }
 
+
+    // index
+    // store
+    //
     public function close(Table $table)
     {
         if ($table->gym()->first()->manager_id != auth()->user()->id)
@@ -147,7 +152,10 @@ class TaskController extends Controller
             'buffet' => implode(',', $task_buffet),
             'buffet_price' => $task_buffet_price,
         ]);
-        return $this->success('یک ' . $buffet->title . ' روی میز ' . $table->name . ' اضافه شد.');
+
+        $finalBuffets = (new GetBuffet())->buffets($task);
+
+        return $this->success($finalBuffets);
     }
 
     public function remove_buffet(Table $table, Buffet $buffet)
@@ -173,7 +181,9 @@ class TaskController extends Controller
             'buffet' => $task_buffet == null ? null : implode(',', array_values($task_buffet)),
             'buffet_price' => $task_buffet_price,
         ]);
-        return $this->success($buffet->title . ' از روی میز ' . $table->name . ' حذف شد.');
+        $finalBuffets = (new GetBuffet())->buffets($task);
+
+        return $this->success($finalBuffets);
     }
 
 }

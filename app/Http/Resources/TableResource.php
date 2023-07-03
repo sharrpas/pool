@@ -4,6 +4,7 @@ namespace App\Http\Resources;
 
 use App\Models\Buffet;
 use App\Models\TableTask;
+use App\Services\GetBuffet;
 use Illuminate\Console\View\Components\Task;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Carbon;
@@ -26,15 +27,7 @@ class TableResource extends JsonResource
             $play_price = round(((int)(($this->price) / 60 * $play_time)), -2);
 
             if ($task->buffet != null) {
-                $task_buffets = array_map('intval', explode(',', $task->buffet));
-                sort($task_buffets);
-
-                $buffets = Buffet::query()->whereIn('id', $task_buffets)->get();
-                $ids = $buffets->pluck('id')->toArray();
-                $buffetsInArray = BuffetResource::collection($buffets);
-                $finalBuffets = collect($task_buffets)->map(function ($id) use ($ids, $buffetsInArray) {
-                    return $buffetsInArray[array_search($id, array_values($ids))];
-                });
+                $finalBuffets = (new GetBuffet())->buffets($task);
             }
             $playerr = ($task->player()->first() ?? null);
 

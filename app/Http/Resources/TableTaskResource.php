@@ -3,6 +3,7 @@
 namespace App\Http\Resources;
 
 use App\Models\Buffet;
+use App\Services\GetBuffet;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Storage;
 
@@ -18,20 +19,9 @@ class TableTaskResource extends JsonResource
     {
 
         if ($this->buffet != null) {
-            $task_buffets = array_map('intval', explode(',', $this->buffet));
-            sort($task_buffets);
+            $finalBuffets = (new GetBuffet())->buffets($this);
+        }
 
-            $buffets = Buffet::query()->whereIn('id', $task_buffets)->get();
-            $ids = $buffets->pluck('id')->toArray();
-            $buffetsInArray = BuffetResource::collection($buffets);
-            $finalBuffets = collect($task_buffets)->map(function ($id) use ($ids, $buffetsInArray) {
-                return $buffetsInArray[array_search($id, array_values($ids))];
-            });
-        }
-        else
-        {
-            $finalBuffets = null;
-        }
         $playerr = ($this->player()->first() ?? ['name' => 'مهمان','username' => 'Guest'])['username'];
 
         return [
@@ -42,7 +32,7 @@ class TableTaskResource extends JsonResource
             'payment_status' => $this->payment_status,
             'opened_at' => substr($this->opened_at, 11, 5),
             'closed_at' => substr($this->closed_at, 11, 5),
-            'buffet' => $finalBuffets,
+            'buffet' => $finalBuffets ?? null,
             'buffet_price' => $this->buffet_price,
         ];
     }
