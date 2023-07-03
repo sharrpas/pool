@@ -78,14 +78,14 @@ Route::prefix('user')->group(function () {
 
     Route::get('dashboard/gyms/city/{city}', [DashboardController::class, 'index']);
 
+    Route::get('store/products',[StoreController::class,'index']);
+    Route::get('store/product/{product}',[StoreController::class,'show']);
+
     Route::middleware(['auth:sanctum', 'role:user'])->group(function (){
 
         Route::get('profile', [\App\Http\Controllers\User\ProfileController::class, 'show']);
         Route::post('profile', [\App\Http\Controllers\User\ProfileController::class, 'update']);
         Route::get('dashboard/gym/{gym}',[DashboardController::class,'show']);
-
-        Route::get('store/products',[StoreController::class,'index']);
-        Route::get('store/product/{product}',[StoreController::class,'show']);
 
         Route::get('activities',[ActivityController::class,'index']);
         Route::get('activity/{activity}',[ActivityController::class,'show']);
