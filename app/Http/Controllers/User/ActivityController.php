@@ -30,10 +30,10 @@ class ActivityController extends Controller
 //                        $item->date => $item
 //                    ];
                 return [
-                    $item->date => TableTaskResource::make($item),
+                    Verta($item->date)->format('Y-m-d') => TableTaskResource::make($item),
+//                    $item->date => TableTaskResource::make($item),
                 ];
-            })
-        ;
+            });
 
         return $this->success(($activities));
     }
