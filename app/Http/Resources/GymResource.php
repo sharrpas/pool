@@ -16,12 +16,14 @@ class GymResource extends JsonResource
      */
     public function toArray($request)
     {
+        $city_name = $this->city()->first()->city;
         return [
             "id" => $this->id,
             "manager_id" => $this->manager_id,
             "name" => $this->name,
             "about" => $this->about,
-            "city" => $this->city()->first()->city,
+//            "city" => $this->city()->first()->city,
+            "city" => ['value' => $city_name , 'label' => $city_name],
             "address" => $this->address,
             "avatar" => $this->avatar ? Storage::url('images/'. $this->avatar) : null,
             "image" => $this->image < 11 ? $this->image : Storage::url('images/'. $this->image),
