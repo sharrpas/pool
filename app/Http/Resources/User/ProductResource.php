@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\User;
 
+use App\Http\Resources\GymResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Storage;
 
@@ -26,7 +27,7 @@ class ProductResource extends JsonResource
                 return Storage::url('images/stores/' . $image);
             }, $images),
             'mobile' => $this->whenLoaded('gym')->manager->mobile,
-            'gym' => $this->whenLoaded('gym'),
+            'gym' => GymResource::make($this->whenLoaded('gym')),
         ];
     }
 }
