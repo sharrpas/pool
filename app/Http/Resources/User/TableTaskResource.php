@@ -16,6 +16,8 @@ class TableTaskResource extends JsonResource
      */
     public function toArray($request)
     {
+        $buffet_count = $this->buffet ? count(explode(',', $this->buffet)) : null;
+
         return [
             'id' => $this->id,
             'table_name' => $this->table->name,
@@ -24,6 +26,7 @@ class TableTaskResource extends JsonResource
             'payment_status' => $this->payment_status,
             'opened_at' => substr($this->opened_at, 11, 5),
             'closed_at' => substr($this->closed_at, 11, 5),
+            'buffet_count' => $buffet_count,
 
         ];
     }
