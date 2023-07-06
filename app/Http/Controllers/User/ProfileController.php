@@ -4,6 +4,7 @@ namespace App\Http\Controllers\User;
 
 use App\Constants\Status;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\User\ProfileResource;
 use http\Client\Curl\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -14,7 +15,7 @@ class ProfileController extends Controller
     public function show()
     {
         $user = auth()->user();
-        return $this->success($user);
+        return $this->success(ProfileResource::make($user));
     }
 
     public function update(Request $request)
