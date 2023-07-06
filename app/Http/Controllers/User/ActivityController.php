@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\User\TableOneTaskResource;
 use App\Http\Resources\User\TableTaskResource;
 use App\Models\TableTask;
 use App\Models\User;
@@ -40,6 +41,6 @@ class ActivityController extends Controller
 
     public function show(TableTask $activity)
     {
-        return $this->success(\App\Http\Resources\TableTaskResource::make($activity));
+        return $this->success(TableOneTaskResource::make($activity));
     }
 }
