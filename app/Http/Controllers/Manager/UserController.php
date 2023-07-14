@@ -50,6 +50,8 @@ class UserController extends Controller
         if (!$user->hasRole('user'))
             return $this->error(Status::NOT_FOUND,'نام کاربری مورد نظر در لیست کاربران پیدا نشد');
 
+        if ($user->tasks()->where('closed_at',null)->first())
+            return $this->error(Status::NOT_FOUND,'بازیکن مورد نظر در حال حاضر یک میز فعال دارد');
 
         $task->update([
             'player_id' => $user->id,
