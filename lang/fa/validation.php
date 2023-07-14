@@ -145,5 +145,6 @@ return array(
         "image" => "عکس",
         "images.*" => "عکس",
         "about" => "درباره",
+        "new_password" => "رمز جدید",
     ),
 );
