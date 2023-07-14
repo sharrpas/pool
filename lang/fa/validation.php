@@ -79,6 +79,7 @@ return array(
     "timezone" => ":attribute باید یک منطقه معتبر باشد.",
     'string' => ':attribute باید از نوع متن باشد ',
     "unique" => ":attribute قبلا انتخاب شده است.",
+    'uploaded' => ':attribute آپلود نشد.',
     "url" => "فرمت آدرس :attribute اشتباه است.",
 
     /*
