@@ -33,7 +33,7 @@ class TableTaskResource extends JsonResource
             'opened_at' => substr($this->opened_at, 11, 5),
             'closed_at' => substr($this->closed_at, 11, 5),
             'buffet' => $finalBuffets ?? null,
-            'buffet_price' => $this->buffet_price,
+            'buffet_price' => $this->buffet_price ?? 0,
         ];
     }
 }
