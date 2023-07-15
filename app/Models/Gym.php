@@ -14,6 +14,7 @@ class Gym extends Model
     protected $hidden = [
         'created_at',
         'updated_at',
+        'deleted_at',
     ];
     public function manager()
     {
@@ -23,5 +24,20 @@ class Gym extends Model
     public function tables()
     {
         return $this->hasMany(Table::class);
+    }
+
+    public function products()
+    {
+        return $this->hasMany(Product::class);
+    }
+
+    public function buffets()
+    {
+        return $this->hasMany(Buffet::class);
+    }
+
+    public function city()
+    {
+        return $this->belongsTo(City::class);
     }
 }

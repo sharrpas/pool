@@ -12,6 +12,7 @@ class Status
     public const NOT_FOUND = 404;
     public const ROUTE_NOT_FOUND = 410;
     public const OPERATION_ERROR = 444;
+    public const Unexpected_Problem = 500;
 
     public static function getMessage($code)
     {
@@ -24,6 +25,7 @@ class Status
             self::PERMISSION_DENIED => "اجازه رد شد",
             self::NOT_FOUND => "پیدا نشد",
             self::ROUTE_NOT_FOUND => "مسیر انتخاب شده نامعتبر است",
+            self::Unexpected_Problem => "یک مشکل غیرمنتظره رخ داد. لطفا دوباره تلاش کنید",
         ];
 
         return $messages[$code];

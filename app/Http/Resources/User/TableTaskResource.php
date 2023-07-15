@@ -1,11 +1,10 @@
 <?php
 
-namespace App\Http\Resources;
+namespace App\Http\Resources\User;
 
+use App\Http\Resources\BuffetResource;
 use App\Models\Buffet;
-use App\Services\GetBuffet;
 use Illuminate\Http\Resources\Json\JsonResource;
-use Illuminate\Support\Facades\Storage;
 
 class TableTaskResource extends JsonResource
 {
@@ -17,23 +16,18 @@ class TableTaskResource extends JsonResource
      */
     public function toArray($request)
     {
-
-        if ($this->buffet != null) {
-            $finalBuffets = (new GetBuffet())->buffets($this);
-        }
-
-        $playerr = ($this->player()->first() ?? ['name' => 'مهمان','username' => 'Guest'])['username'];
+        $buffet_count = $this->buffet ? count(explode(',', $this->buffet)) : null;
 
         return [
             'id' => $this->id,
-            'table_id' => $this->table_id,
-            'player' => $playerr,
-            'price_so_far' => $this->price_so_far,
+            'table_name' => $this->table->name,
+            'gym_name' => $this->table->gym->name,
+            'total_price' => $this->price_so_far + $this->buffet_price,
             'payment_status' => $this->payment_status,
             'opened_at' => substr($this->opened_at, 11, 5),
             'closed_at' => substr($this->closed_at, 11, 5),
-            'buffet' => $finalBuffets ?? null,
-            'buffet_price' => $this->buffet_price ?? 0,
+            'buffet_count' => $buffet_count,
+
         ];
     }
 }

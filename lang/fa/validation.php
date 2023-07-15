@@ -55,6 +55,13 @@ return array(
     ),
     "not_in" => ":attribute انتخاب شده، معتبر نیست.",
     "numeric" => ":attribute باید شامل عدد باشد.",
+    'password' => [
+        'letters' => ':attribute باید حداقل شامل یک حرف باشد.',
+        'mixed' => ':attribute باید حداقل یک حرف بزرگ و یک حرف کوچک داشته باشد.',
+        'numbers' => ':attribute باید حداقل یک عدد داشته باشد.',
+        'symbols' => ':attribute باید حداقل یک نماد داشته باشد.',
+        'uncompromised' => 'داده شده :attribute در یک نشت داده ظاهر شده است. لطفا متفاوت انتخاب کنید :attribute.',
+    ],
     "regex" => ":attribute یک فرمت معتبر نیست",
     "required" => "فیلد :attribute الزامی است",
     "required_if" => "فیلد :attribute هنگامی که :other برابر با :value است، الزامیست.",
@@ -72,6 +79,7 @@ return array(
     "timezone" => ":attribute باید یک منطقه معتبر باشد.",
     'string' => ':attribute باید از نوع متن باشد ',
     "unique" => ":attribute قبلا انتخاب شده است.",
+    'uploaded' => ':attribute آپلود نشد.',
     "url" => "فرمت آدرس :attribute اشتباه است.",
 
     /*
@@ -128,10 +136,15 @@ return array(
         "time" => "زمان",
         "available" => "موجود",
         "size" => "اندازه",
-        "pic" => "عکس",
+        "pic" => "تصویر",
         "price" => "قیمت",
         "gym_name" => "نام باشگاه",
         "manager_name" => "مدیر باشگاه",
         "verification_code" => "کد تایید",
+        "avatar" => "آواتار",
+        "image" => "عکس",
+        "images.*" => "عکس",
+        "about" => "درباره",
+        "new_password" => "رمز جدید",
     ),
 );

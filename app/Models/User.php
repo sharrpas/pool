@@ -24,6 +24,7 @@ class User extends Authenticatable
         'username',
         'password',
         'mobile',
+        'avatar',
     ];
 
     /**
@@ -36,6 +37,7 @@ class User extends Authenticatable
         'password',
         'created_at',
         'updated_at',
+        'deleted_at',
     ];
 
     public function roles()
@@ -63,6 +65,11 @@ class User extends Authenticatable
     public function verificationCode()
     {
         return $this->hasMany(VerificationCode::class);
+    }
+
+    public function tasks()
+    {
+        return $this->hasMany(TableTask::class,'player_id');
     }
 
 }
