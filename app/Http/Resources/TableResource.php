@@ -49,7 +49,7 @@ class TableResource extends JsonResource
             'player' => $playerr? UserResource::make($playerr) : null,
 
             'buffet' => $finalBuffets ?? null,
-            'buffet_price' => $task->buffet_price ?? null,
+            'buffet_price' => $task->buffet_price ?? 0,
 
 
         ];
